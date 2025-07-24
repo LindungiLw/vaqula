@@ -13,7 +13,19 @@ class _AppCoverState extends State<AppCover> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WelcomingApp()));
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => WelcomingApp(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+          transitionDuration: Duration(milliseconds: 800),
+        ),
+      );
     });
   }
 
@@ -30,7 +42,6 @@ class _AppCoverState extends State<AppCover> {
             width: double.infinity,
             alignment: Alignment.center,
           ),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -44,7 +55,6 @@ class _AppCoverState extends State<AppCover> {
                       fontSize: 50,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-
                       shadows: [
                         Shadow(
                           color: Colors.black,
