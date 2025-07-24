@@ -93,6 +93,7 @@ class SignupScreen extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () {
                     // Navigate to login page (if any)
+                    Navigator.pushNamed(context, '/login');
                   },
                   child: Text.rich(
                     TextSpan(
