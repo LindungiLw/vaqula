@@ -1,110 +1,134 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class AddReviewPage extends StatefulWidget {
   final String bookTitle;
 
-  const AddReviewPage({
-    Key? key,
-    required this.bookTitle,
-  }) : super(key: key);
+  const AddReviewPage({Key? key, required this.bookTitle}) : super(key: key);
 
   @override
   State<AddReviewPage> createState() => _AddReviewPageState();
 }
 
 class _AddReviewPageState extends State<AddReviewPage> {
-  int _currentRating = 0; // To store the selected rating
+  double _currentRating = 0;
+  final TextEditingController _reviewController = TextEditingController();
+
+  @override
+  void dispose() {
+    _reviewController.dispose();
+    super.dispose();
+  }
+
+  void _submitReview() {
+    print('Mengirim review untuk: ${widget.bookTitle}');
+    print('Rating: $_currentRating');
+    print('Review: ${_reviewController.text}');
+
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Review Anda berhasil ditambahkan!')),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).iconTheme.color),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: const Text(
+        title: Text(
           'Add Review',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Theme.of(context).appBarTheme.titleTextStyle?.color, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Your Overall Rating Of The Product',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
-            const SizedBox(height: 10),
-            Row(
-              children: List.generate(5, (index) {
-                return IconButton(
-                  icon: Icon(
-                    index < _currentRating ? Icons.star_rate_rounded : Icons.star_border_rounded,
-                    color: Colors.amber,
-                    size: 40,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _currentRating = index + 1;
-                    });
-                  },
-                );
-              }),
+            const SizedBox(height: 15),
+            Center(
+              child: RatingBar.builder(
+                initialRating: _currentRating,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                onRatingUpdate: (rating) {
+                  setState(() {
+                    _currentRating = rating;
+                  });
+                },
+              ),
             ),
-            const SizedBox(height: 20),
-            const Text(
+            const SizedBox(height: 30),
+            Text(
               'Add Detailed Review',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
             Container(
               decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10.0),
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.grey.withOpacity(0.3)),
               ),
-              child: const TextField(
+              child: TextField(
+                controller: _reviewController,
                 maxLines: 5,
                 decoration: InputDecoration(
                   hintText: 'Enter here',
+                  hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6)),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.all(12.0),
+                  contentPadding: EdgeInsets.all(16),
                 ),
+                style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
               ),
             ),
             const SizedBox(height: 30),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  // Handle review submission
-                  print('Review submitted with rating: $_currentRating');
-                  Navigator.pop(context); // Go back after submission
-                },
+                onPressed: _submitReview,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.brown[700], // Button color
-                  padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                  backgroundColor: Color(0xFFb8792b),
+                  padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(30),
                   ),
+                  elevation: 8,
                 ),
-                child: const Text(
+                child: Text(
                   'Submit',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

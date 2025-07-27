@@ -1,92 +1,134 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:voqula/untils/theme_provider.dart';
 import 'package:voqula/routes.dart';
-import 'package:voqula/untils/theme_toggle_page.dart';
- import 'package:voqula/home/main_screen.dart';// <<< PASTIKAN INI DIIMPORT
-
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  bool _isDarkMode = false; // 🔁 Toggle status
-
-  void _toggleTheme() {
-    setState(() {
-      _isDarkMode = !_isDarkMode;
-    });
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Watch the ThemeProvider to react to theme changes
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    // Initialise SizeConfig here as it might be needed for initial routes
+    // Although, calling it in AppCover initState is also fine if only needed after splash.
+    // SizeConfig().init(context); // This line is usually not needed here if called in AppCover
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: _isDarkMode
-          ? ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: Colors.black,
-        textTheme: ThemeData.dark().textTheme.apply(fontFamily: 'Poppins'),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.black, // Dark mode app bar
-          iconTheme: IconThemeData(color: Colors.white),
-          titleTextStyle: TextStyle(color: Colors.white),
-        ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Colors.black,
-          selectedItemColor: Colors.brown[400],
-          unselectedItemColor: Colors.grey[700],
-        ),
-        cardColor: Colors.grey[900], // For cards like review items
-        chipTheme: ChipThemeData(
-          backgroundColor: Colors.brown[800],
-          labelStyle: const TextStyle(color: Colors.white),
-          selectedColor: Colors.brown[400],
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.brown[400],
-            foregroundColor: Colors.white,
-          ),
-        ),
-        // Add more theme adjustments for dark mode
-      )
-          : ThemeData.light().copyWith(
-        primaryColor: Colors.blue,
+      title: 'Voqula App',
+      themeMode: themeProvider.themeMode, // Use themeMode from ThemeProvider
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColor: Color(0xFFA05E1A), // Warna utama aplikasi Anda (coklat keemasan)
         scaffoldBackgroundColor: Colors.white,
-        textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Poppins'),
-        appBarTheme: const AppBarTheme(
+        appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
+          titleTextStyle: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
           iconTheme: IconThemeData(color: Colors.black),
-          titleTextStyle: TextStyle(color: Colors.black),
         ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(color: Colors.black), // Warna teks utama
+          bodyMedium: TextStyle(color: Colors.black87),
+          bodySmall: TextStyle(color: Colors.grey[700]), // Warna teks sekunder/hint
+        ),
+        cardColor: Colors.white, // Warna latar belakang Card
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: Colors.white,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.grey,
+          selectedItemColor: Color(0xFFA05E1A), // Warna icon terpilih
+          unselectedItemColor: Colors.grey, // Warna icon tidak terpilih
         ),
-        cardColor: Colors.white,
         chipTheme: ChipThemeData(
           backgroundColor: Colors.grey[200],
-          labelStyle: const TextStyle(color: Colors.black),
-          selectedColor: Colors.brown[700],
+          labelStyle: TextStyle(color: Colors.black87),
+          selectedColor: Color(0xFFA05E1A).withOpacity(0.2), // Warna saat terpilih
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.brown[700],
+            backgroundColor: Color(0xFFA05E1A),
             foregroundColor: Colors.white,
           ),
         ),
-        // Add more theme adjustments for light mode
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.white,
+          labelStyle: TextStyle(color: Colors.grey[700]),
+          hintStyle: TextStyle(color: Colors.grey[500]),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Color(0xFFA05E1A), width: 2),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+          ),
+        ),
       ),
-      routes: {
-        ...appRoutes,
-        '/toggle-theme': (context) => ThemeTogglePage(toggleTheme: _toggleTheme),
-      },
-      initialRoute: '/cover', // <<< INI YANG HARUS DIUBAH!
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Color(0xFFA05E1A), // Warna utama aplikasi Anda
+        scaffoldBackgroundColor: Colors.grey[900], // Background gelap
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.grey[850],
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(color: Colors.white), // Warna teks utama
+          bodyMedium: TextStyle(color: Colors.white70),
+          bodySmall: TextStyle(color: Colors.grey[400]), // Warna teks sekunder/hint
+        ),
+        cardColor: Colors.grey[800], // Warna latar belakang Card
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: Colors.grey[850],
+          selectedItemColor: Color(0xFFA05E1A),
+          unselectedItemColor: Colors.grey[600],
+        ),
+        chipTheme: ChipThemeData(
+          backgroundColor: Colors.grey[700],
+          labelStyle: TextStyle(color: Colors.white),
+          selectedColor: Color(0xFFA05E1A).withOpacity(0.4), // Warna saat terpilih
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFFA05E1A),
+            foregroundColor: Colors.white,
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.grey[700],
+          labelStyle: TextStyle(color: Colors.grey[400]),
+          hintStyle: TextStyle(color: Colors.grey[500]),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Color(0xFFA05E1A), width: 2),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
+          ),
+        ),
+      ),
+      initialRoute: '/cover', // Rute awal Anda
+      routes: appRoutes,
     );
   }
 }

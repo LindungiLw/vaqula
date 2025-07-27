@@ -6,29 +6,23 @@ class WelcomingApp extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background image
           Positioned.fill(
             child: Image.asset(
-              'assets/cover/welcoming_cover_app.jpg',
+              'assets/cover/welcoming_cover_app.jpg', // <<< GANTI DENGAN PATH GAMBAR ASLI ANDA
               fit: BoxFit.cover,
             ),
           ),
-
-          // Dark overlay to improve text readability
           Positioned.fill(
             child: Container(
               color: Colors.black.withOpacity(0.3),
             ),
           ),
-
-          // Content
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  // Quote
                   Text(
                     'Reading Is A Conversation\nAll Books Talk , But A Good\nBook Listens As Well',
                     textAlign: TextAlign.center,
@@ -40,14 +34,12 @@ class WelcomingApp extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 80),
-
-                  // Start Reading Button
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/signup'); // ganti '/home' dengan rute tujuanmu
+                      Navigator.pushReplacementNamed(context, '/signup');
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFb8792b), // Warna seperti di gambar
+                      backgroundColor: Color(0xFFb8792b),
                       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),

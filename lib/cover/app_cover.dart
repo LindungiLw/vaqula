@@ -8,30 +8,32 @@ class AppCover extends StatefulWidget {
 }
 
 class _AppCoverState extends State<AppCover> {
-
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => WelcomingApp(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
-          },
-          transitionDuration: Duration(milliseconds: 800),
-        ),
-      );
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => WelcomingApp(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: child,
+              );
+            },
+            transitionDuration: Duration(milliseconds: 800),
+          ),
+        );
+      }
     });
   }
 
   @override
-  Widget build(BuildContext buildContext) {
+  Widget build(BuildContext context) {
     SizeConfig().init(context);
+
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -41,6 +43,9 @@ class _AppCoverState extends State<AppCover> {
             height: double.infinity,
             width: double.infinity,
             alignment: Alignment.center,
+          ),
+          Container(
+            color: Colors.black.withOpacity(0.3),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

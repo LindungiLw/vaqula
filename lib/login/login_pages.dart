@@ -1,20 +1,19 @@
-import 'package:flutter/gestures.dart'; // Tambahkan ini
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart'; // Jika masih digunakan, biarkan
+// import 'package:google_fonts/google_fonts.dart'; // Hanya jika Anda menggunakan GoogleFonts secara eksplisit
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Color mainColor = Color(0xFFA05E1A); // coklat dominan
+    final Color mainColor = Color(0xFFA05E1A);
     return Scaffold(
       backgroundColor: mainColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Gambar buku
               ClipRRect(
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(30),
@@ -34,15 +33,12 @@ class LoginPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Email
                     TextField(
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: 'Alshaimaa12@Gmail.Com',
                         labelText: 'Email',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                         filled: true,
                         fillColor: Colors.white,
                         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -51,16 +47,12 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 16),
-
-                    // Password
                     TextField(
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'Password',
                         suffixIcon: Icon(Icons.visibility_off),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                         filled: true,
                         fillColor: Colors.white,
                         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -68,7 +60,6 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
 
-                    // Forgot password
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
@@ -82,47 +73,36 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
 
-                    // Login Button
                     ElevatedButton(
                       onPressed: () {
-                        // Setelah berhasil login, navigasi ke MainScreen (dengan BottomNav)
+                        // Navigasi ke MainScreen setelah login
                         Navigator.pushReplacementNamed(context, '/main_screen');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: mainColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         padding: EdgeInsets.symmetric(vertical: 14),
                         elevation: 4,
                       ),
                       child: Text(
                         'Login',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
+                        style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
 
                     SizedBox(height: 16),
-                    // Divider with text
                     Row(
                       children: [
                         Expanded(child: Divider()),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: Text(
-                            'Or Log In With',
-                            style: TextStyle(color: Colors.black87),
-                          ),
+                          child: Text('Or Log In With', style: TextStyle(color: Colors.black87)),
                         ),
                         Expanded(child: Divider()),
                       ],
                     ),
                     SizedBox(height: 16),
 
-                    // Social media buttons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -136,7 +116,6 @@ class LoginPage extends StatelessWidget {
 
                     SizedBox(height: 20),
 
-                    // Sign up text
                     Center(
                       child: RichText(
                         text: TextSpan(

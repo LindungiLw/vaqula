@@ -1,86 +1,60 @@
 import 'package:flutter/material.dart';
 
 class AboutBookTab extends StatelessWidget {
-  final String bookDescription;
-
-  AboutBookTab({
-    Key? key,
-    required this.bookDescription,
-  }) : super(key: key);
-
-  // Example "You May Like This" books
-  final List<Map<String, String>> _youMayLikeThis = [
-    {
-      'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg',
-      'title': 'The Bridge Home',
-      'price': '\$80.00',
-    },
-    {
-      'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg',
-      'title': 'Book Title 2',
-      'price': '\$50.00',
-    },
-    {
-      'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg',
-      'title': 'Book Title 3',
-      'price': '\$60.00',
-    },
-  ];
+  const AboutBookTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0), // Adjust vertical padding to avoid double padding
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 10), // Space from the tab bar
           Text(
-            bookDescription,
-            style: const TextStyle(
+            'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.',
+            style: TextStyle(
               fontSize: 16,
-              color: Colors.black87,
               height: 1.5,
+              color: Theme.of(context).textTheme.bodyMedium?.color,
             ),
           ),
           const SizedBox(height: 20),
-          _buildSectionHeader('You May Like This'),
+          _buildSectionHeader(context, 'You May Like This'),
           const SizedBox(height: 15),
-          _buildYouMayLikeThisList(),
-          const SizedBox(height: 20),
+          _buildYouMayLikeList(context),
         ],
       ),
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(BuildContext context, String title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
           ),
         ),
         TextButton(
           onPressed: () {
             print('More $title tapped!');
           },
-          child: const Row(
+          child: Row(
             children: [
               Text(
                 'More',
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: Theme.of(context).textTheme.bodySmall?.color,
                   fontSize: 16,
                 ),
               ),
               Icon(
                 Icons.arrow_forward_ios,
-                color: Colors.grey,
+                color: Theme.of(context).textTheme.bodySmall?.color,
                 size: 16,
               ),
             ],
@@ -90,60 +64,105 @@ class AboutBookTab extends StatelessWidget {
     );
   }
 
-  Widget _buildYouMayLikeThisList() {
+  Widget _buildYouMayLikeList(BuildContext context) {
+    final List<Map<String, String>> youMayLikeBooks = [
+      {
+        'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg',
+        'title': 'The Loneliest Girl in the Universe',
+        'price': '\$25.00',
+      },
+      {
+        'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg',
+        'title': 'The Bridge Kingdom',
+        'price': '\$30.00',
+      },
+      {
+        'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg',
+        'title': 'Another Book Title',
+        'price': '\$20.00',
+      },
+    ];
+
     return SizedBox(
-      height: 200, // Height for the horizontal list
+      height: 250,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: _youMayLikeThis.length,
+        itemCount: youMayLikeBooks.length,
         itemBuilder: (context, index) {
-          final item = _youMayLikeThis[index];
+          final book = youMayLikeBooks[index];
           return Padding(
             padding: const EdgeInsets.only(right: 15.0),
-            child: SizedBox(
-              width: 120, // Width for each item
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.network(
-                      item['imageUrl']!,
-                      height: 150,
-                      width: 120,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        height: 150,
-                        width: 120,
-                        color: Colors.grey[300],
-                        child: const Icon(Icons.broken_image, color: Colors.grey),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    item['title']!,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    item['price']!,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+            child: _RecommendationItem(
+              imageUrl: book['imageUrl']!,
+              title: book['title']!,
+              price: book['price']!,
+              textColor: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
+              secondaryTextColor: Theme.of(context).textTheme.bodySmall?.color ?? Colors.grey,
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _RecommendationItem extends StatelessWidget {
+  final String imageUrl;
+  final String title;
+  final String price;
+  final Color textColor;
+  final Color secondaryTextColor;
+
+  const _RecommendationItem({
+    required this.imageUrl,
+    required this.title,
+    required this.price,
+    required this.textColor,
+    required this.secondaryTextColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 150,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.network(
+              imageUrl,
+              height: 180,
+              width: 150,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                height: 180,
+                width: 150,
+                color: Colors.grey[300],
+                child: const Icon(Icons.broken_image, color: Colors.grey),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: textColor,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            price,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: textColor,
+            ),
+          ),
+        ],
       ),
     );
   }

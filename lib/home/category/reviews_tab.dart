@@ -1,149 +1,197 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
 import 'add_review_page.dart';
- // Import the add review page
+ // Import halaman tambah review
 
 class ReviewsTab extends StatelessWidget {
   final String bookTitle;
 
-  const ReviewsTab({
-    Key? key,
-    required this.bookTitle,
-  }) : super(key: key);
-
-  // Example review data
-  final List<Map<String, dynamic>> _reviews = const [
-    {
-      'user': 'Dale Thiefl',
-      'time': '11 Months Ago',
-      'rating': 4,
-      'comment': 'There Are Many Variations Of Passages Of Lorem Ipsum Available Unusu, Or Randomised Words Which Don\'t Look Even Slightly Believable.',
-    },
-    {
-      'user': 'Jane Doe',
-      'time': '2 Months Ago',
-      'rating': 5,
-      'comment': 'Amazing book! Highly recommend to everyone.',
-    },
-  ];
+  const ReviewsTab({Key? key, required this.bookTitle}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Search/Filter Row
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: const TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search in Reviews',
-                      border: InputBorder.none,
-                      prefixIcon: Icon(Icons.search, color: Colors.grey),
-                    ),
-                  ),
+              Text(
+                'Review(1)', // Ganti dengan jumlah review sebenarnya
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
-              const SizedBox(width: 10),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.filter_list, color: Colors.grey),
-                  onPressed: () {
-                    // Handle filter reviews
-                  },
+              TextButton(
+                onPressed: () {
+                  // Navigasi ke halaman tambah review
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddReviewPage(bookTitle: bookTitle),
+                    ),
+                  );
+                },
+                child: Text(
+                  'Add Review',
+                  style: TextStyle(
+                    color: Colors.brown[700],
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 15),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddReviewPage(bookTitle: bookTitle)),
-                );
-              },
-              icon: Icon(Icons.add, color: Colors.brown[700]),
-              label: Text(
-                'Add Review',
-                style: TextStyle(color: Colors.brown[700], fontWeight: FontWeight.bold),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search in Reviews',
+                hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6)),
+                border: InputBorder.none,
+                prefixIcon: Icon(Icons.search, color: Theme.of(context).iconTheme.color?.withOpacity(0.6)),
               ),
+              style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
             ),
           ),
           const SizedBox(height: 15),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _reviews.length,
-              itemBuilder: (context, index) {
-                final review = _reviews[index];
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 15),
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: BorderSide(color: Colors.grey[300]!),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const CircleAvatar(
-                              backgroundColor: Colors.brown,
-                              radius: 20,
-                              child: Icon(Icons.person, color: Colors.white),
-                            ),
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  review['user'],
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                ),
-                                Text(
-                                  review['time'],
-                                  style: const TextStyle(color: Colors.grey, fontSize: 12),
-                                ),
-                              ],
-                            ),
-                            const Spacer(),
-                            Row(
-                              children: List.generate(5, (starIndex) {
-                                return Icon(
-                                  starIndex < review['rating'] ? Icons.star : Icons.star_border,
-                                  color: Colors.amber,
-                                  size: 18,
-                                );
-                              }),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          review['comment'],
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Filter',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+              ),
+              Icon(Icons.tune, color: Theme.of(context).iconTheme.color), // Ikon filter
+            ],
+          ),
+          const SizedBox(height: 15),
+          // Daftar review (contoh 1 review)
+          _buildReviewItem(
+            context,
+            imageUrl: 'https://via.placeholder.com/150', // Ganti dengan gambar profil user
+            userName: 'Date Thief',
+            timeAgo: '11 Months Ago',
+            rating: 4.0,
+            reviewText: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s. It has survived not only five centuries.',
+          ),
+          const SizedBox(height: 20),
+          // Tombol "Buy Now" - bisa saja berada di layout yang berbeda jika sesuai dengan desain Anda
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                print('Buy Now tapped!');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFFb8792b),
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                elevation: 8,
+              ),
+              child: Text(
+                'Buy Now',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReviewItem(
+      BuildContext context, {
+        required String imageUrl,
+        required String userName,
+        required String timeAgo,
+        required double rating,
+        required String reviewText,
+      }) {
+    return Container(
+      padding: const EdgeInsets.all(12.0),
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundImage: NetworkImage(imageUrl),
+              ),
+              const SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    userName,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
                   ),
-                );
-              },
+                  Text(
+                    timeAgo,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context).textTheme.bodySmall?.color,
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              RatingBarIndicator(
+                rating: rating,
+                itemBuilder: (context, index) => Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                itemCount: 5,
+                itemSize: 20.0,
+                direction: Axis.horizontal,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            reviewText,
+            style: TextStyle(
+              fontSize: 14,
+              height: 1.5,
+              color: Theme.of(context).textTheme.bodyMedium?.color,
             ),
           ),
         ],

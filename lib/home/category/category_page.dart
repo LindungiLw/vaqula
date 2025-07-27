@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'book_detail_page.dart'; // Make sure this path is correct
+import 'book_detail_page.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({Key? key}) : super(key: key);
@@ -9,12 +9,10 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  // Example categories
   final List<String> _categories = [
     'New', 'Fantasy', 'Fiction', 'Horror', 'Romance', 'Sci-Fi', 'Thriller'
   ];
 
-  // Example book data (you would replace this with real data models)
   final List<Map<String, String>> _newBookList = [
     {
       'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg',
@@ -55,22 +53,24 @@ class _CategoryPageState extends State<CategoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
+        // Tombol kembali di CategoryPage mungkin tidak selalu diperlukan jika hanya diakses dari BottomNav.
+        // Tapi jika bisa diakses langsung, ini akan kembali ke halaman sebelumnya.
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).iconTheme.color),
           onPressed: () {
-            Navigator.pop(context); // Go back to the previous screen (Home)
+            Navigator.pop(context); // Kembali ke halaman sebelumnya
           },
         ),
-        title: const Text(
+        title: Text(
           'Category',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Theme.of(context).appBarTheme.titleTextStyle?.color, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: Colors.black),
+            icon: Icon(Icons.search, color: Theme.of(context).iconTheme.color),
             onPressed: () {
               // Handle search action
             },
@@ -83,23 +83,23 @@ class _CategoryPageState extends State<CategoryPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Search Bar
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: Theme.of(context).cardColor,
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                child: const TextField(
+                child: TextField(
                   decoration: InputDecoration(
                     hintText: 'Search Here',
+                    hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6)),
                     border: InputBorder.none,
-                    prefixIcon: Icon(Icons.search, color: Colors.grey),
+                    prefixIcon: Icon(Icons.search, color: Theme.of(context).iconTheme.color?.withOpacity(0.6)),
                   ),
+                  style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
                 ),
               ),
               const SizedBox(height: 20),
-              // Category Chips
               SizedBox(
                 height: 40,
                 child: ListView.builder(
@@ -110,9 +110,9 @@ class _CategoryPageState extends State<CategoryPage> {
                       padding: const EdgeInsets.only(right: 8.0),
                       child: Chip(
                         label: Text(_categories[index]),
-                        backgroundColor: index == 0 ? Colors.brown[700] : Colors.grey[200], // Highlight 'New'
+                        backgroundColor: index == 0 ? Theme.of(context).chipTheme.selectedColor : Theme.of(context).chipTheme.backgroundColor,
                         labelStyle: TextStyle(
-                          color: index == 0 ? Colors.white : Colors.black,
+                          color: index == 0 ? (Theme.of(context).chipTheme.selectedColor?.computeLuminance() ?? 0) > 0.5 ? Colors.black : Colors.white : Theme.of(context).chipTheme.labelStyle?.color,
                           fontWeight: FontWeight.bold,
                         ),
                         shape: RoundedRectangleBorder(
@@ -124,48 +124,49 @@ class _CategoryPageState extends State<CategoryPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              _buildSectionHeader('New Book List'),
+              _buildSectionHeader(context, 'New Book List'),
               const SizedBox(height: 15),
-              _buildNewBookList(),
+              _buildNewBookList(context),
               const SizedBox(height: 20),
-              _buildSectionHeader('Most Popular'),
+              _buildSectionHeader(context, 'Most Popular'),
               const SizedBox(height: 15),
-              _buildMostPopularList(),
+              _buildMostPopularList(context),
             ],
           ),
         ),
       ),
+      // PENTING: TIDAK ADA bottomNavigationBar DI SINI!
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(BuildContext context, String title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
           ),
         ),
         TextButton(
           onPressed: () {
             print('More $title tapped!');
           },
-          child: const Row(
+          child: Row(
             children: [
               Text(
                 'More',
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: Theme.of(context).textTheme.bodySmall?.color,
                   fontSize: 16,
                 ),
               ),
               Icon(
                 Icons.arrow_forward_ios,
-                color: Colors.grey,
+                color: Theme.of(context).textTheme.bodySmall?.color,
                 size: 16,
               ),
             ],
@@ -175,9 +176,9 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
-  Widget _buildNewBookList() {
+  Widget _buildNewBookList(BuildContext context) {
     return SizedBox(
-      height: 200, // Adjusted height for these items
+      height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: _newBookList.length,
@@ -187,88 +188,14 @@ class _CategoryPageState extends State<CategoryPage> {
             padding: const EdgeInsets.only(right: 15.0),
             child: GestureDetector(
               onTap: () {
-                // Navigate to Book Detail Page
+                // Navigasi ke BookDetailPage
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const BookDetailPage(
-                      bookTitle: 'The Whispers', // Hardcoded for this example
-                      authorName: 'Greg Howard', // Hardcoded for this example
-                      imageUrl: 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg', // Hardcoded for this example
-                    ),
-                  ),
-                );
-              },
-              child: SizedBox(
-                width: 120, // Width for each item
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8.0),
-                      child: Image.network(
-                        book['imageUrl']!,
-                        height: 150,
-                        width: 120,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          height: 150,
-                          width: 120,
-                          color: Colors.grey[300],
-                          child: const Icon(Icons.broken_image, color: Colors.grey),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      book['title']!,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Colors.black,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      book['author']!,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildMostPopularList() {
-    return SizedBox(
-      height: 200, // Adjusted height for these items
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: _mostPopularList.length,
-        itemBuilder: (context, index) {
-          final book = _mostPopularList[index];
-          return Padding(
-            padding: const EdgeInsets.only(right: 15.0),
-            child: GestureDetector(
-              onTap: () {
-                // Navigate to Book Detail Page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const BookDetailPage(
-                      bookTitle: 'The Whispers', // Hardcoded for this example
-                      authorName: 'Greg Howard', // Hardcoded for this example
-                      imageUrl: 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg', // Hardcoded for this example
+                    builder: (context) => BookDetailPage(
+                      bookTitle: book['title']!,
+                      authorName: book['author']!,
+                      imageUrl: book['imageUrl']!,
                     ),
                   ),
                 );
@@ -296,18 +223,92 @@ class _CategoryPageState extends State<CategoryPage> {
                     const SizedBox(height: 8),
                     Text(
                       book['title']!,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: Colors.black,
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       book['author']!,
-                      style: const TextStyle(
-                        color: Colors.grey,
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodySmall?.color,
+                        fontSize: 12,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildMostPopularList(BuildContext context) {
+    return SizedBox(
+      height: 200,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: _mostPopularList.length,
+        itemBuilder: (context, index) {
+          final book = _mostPopularList[index];
+          return Padding(
+            padding: const EdgeInsets.only(right: 15.0),
+            child: GestureDetector(
+              onTap: () {
+                // Navigasi ke BookDetailPage
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BookDetailPage(
+                      bookTitle: book['title']!,
+                      authorName: book['author']!,
+                      imageUrl: book['imageUrl']!,
+                    ),
+                  ),
+                );
+              },
+              child: SizedBox(
+                width: 120,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.network(
+                        book['imageUrl']!,
+                        height: 150,
+                        width: 120,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          height: 150,
+                          width: 120,
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.broken_image, color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      book['title']!,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      book['author']!,
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodySmall?.color,
                         fontSize: 12,
                       ),
                       maxLines: 1,

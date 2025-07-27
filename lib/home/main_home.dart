@@ -1,5 +1,6 @@
-// lib/home/main_home.dart (Pastikan TIDAK ADA bottomNavigationBar di sini)
 import 'package:flutter/material.dart';
+import 'package:voqula/home/search/author_detail_page.dart';
+import 'category/book_detail_page.dart'; // Import
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold( // Scaffold ini hanya untuk AppBar dan Body
+    return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120.0),
         child: AppBar(
@@ -37,7 +38,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                       IconButton(
                         icon: Icon(Icons.sort, color: Theme.of(context).iconTheme.color),
-                        onPressed: () {},
+                        onPressed: () {
+                          // Handle sort/filter action
+                        },
                       ),
                     ],
                   ),
@@ -81,13 +84,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      // >>> TIDAK ADA bottomNavigationBar DI SINI! <<<
     );
   }
 
-  // Your helper methods like _buildSectionHeader, _buildBookList, _buildMostPopularList
-  // and StatelessWidget _BookItem, _MostPopularItem should be defined here,
-  // passing context and using Theme.of(context) for colors as I showed previously.
   Widget _buildSectionHeader(BuildContext context, String title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -132,29 +131,104 @@ class _HomePageState extends State<HomePage> {
         scrollDirection: Axis.horizontal,
         children: <Widget>[
           _BookItem(
-            imageUrl: 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg',
+            imageUrl: 'assets/images/the_book_thief.jpg', // <<< Ganti dengan path asli
             title: 'The Book Thief',
             author: 'Corinne Sweet',
+            authorImageUrl: 'https://via.placeholder.com/150', // Dummy author image
             price: '\$56.00',
             textColor: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
             secondaryTextColor: Theme.of(context).textTheme.bodySmall?.color ?? Colors.grey,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookDetailPage(
+                    bookTitle: 'The Book Thief',
+                    authorName: 'Corinne Sweet',
+                    imageUrl: 'assets/images/the_book_thief.jpg',
+                  ),
+                ),
+              );
+            },
+            onAuthorTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AuthorDetailPage(
+                    authorName: 'Corinne Sweet',
+                    imageUrl: 'https://via.placeholder.com/150', // Dummy author image
+                  ),
+                ),
+              );
+            },
           ),
+          SizedBox(width: 15),
           _BookItem(
-            imageUrl: 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg',
-            title: 'the whispers',
+            imageUrl: 'assets/images/the_whispers.jpg', // <<< Ganti dengan path asli
+            title: 'The Whispers',
             author: 'Greg Howard',
+            authorImageUrl: 'https://via.placeholder.com/150', // Dummy author image
             price: '\$33',
             textColor: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
             secondaryTextColor: Theme.of(context).textTheme.bodySmall?.color ?? Colors.grey,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookDetailPage(
+                    bookTitle: 'The Whispers',
+                    authorName: 'Greg Howard',
+                    imageUrl: 'assets/images/the_whispers.jpg',
+                  ),
+                ),
+              );
+            },
+            onAuthorTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AuthorDetailPage(
+                    authorName: 'Greg Howard',
+                    imageUrl: 'https://via.placeholder.com/150', // Dummy author image
+                  ),
+                ),
+              );
+            },
           ),
+          SizedBox(width: 15),
           _BookItem(
-            imageUrl: 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg',
+            imageUrl: 'assets/images/weird_girl.jpg', // <<< Ganti dengan path asli
             title: 'Weird Girl',
             author: 'Corinne Sweet',
+            authorImageUrl: 'https://via.placeholder.com/150', // Dummy author image
             price: '\$44.00',
             textColor: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
             secondaryTextColor: Theme.of(context).textTheme.bodySmall?.color ?? Colors.grey,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookDetailPage(
+                    bookTitle: 'Weird Girl',
+                    authorName: 'Corinne Sweet',
+                    imageUrl: 'assets/images/weird_girl.jpg',
+                  ),
+                ),
+              );
+            },
+            onAuthorTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AuthorDetailPage(
+                    authorName: 'Corinne Sweet',
+                    imageUrl: 'https://via.placeholder.com/150', // Dummy author image
+                  ),
+                ),
+              );
+            },
           ),
+          SizedBox(width: 15),
         ],
       ),
     );
@@ -167,20 +241,59 @@ class _HomePageState extends State<HomePage> {
         scrollDirection: Axis.horizontal,
         children: <Widget>[
           _MostPopularItem(
-            imageUrl: 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg',
+            imageUrl: 'assets/images/mindfulness_journal.jpg', // <<< Ganti dengan path asli
             title: 'Mindfulness Journal',
             textColor: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookDetailPage(
+                    bookTitle: 'Mindfulness Journal',
+                    authorName: 'Various Authors', // Dummy author
+                    imageUrl: 'assets/images/mindfulness_journal.jpg',
+                  ),
+                ),
+              );
+            },
           ),
+          SizedBox(width: 15),
           _MostPopularItem(
-            imageUrl: 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg',
+            imageUrl: 'assets/images/star_girl.jpg', // <<< Ganti dengan path asli
             title: 'Star Girl',
             textColor: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookDetailPage(
+                    bookTitle: 'Star Girl',
+                    authorName: 'Various Authors', // Dummy author
+                    imageUrl: 'assets/images/star_girl.jpg',
+                  ),
+                ),
+              );
+            },
           ),
+          SizedBox(width: 15),
           _MostPopularItem(
-            imageUrl: 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg',
+            imageUrl: 'assets/images/book_ma.jpg', // <<< Ganti dengan path asli
             title: 'Book Ma...',
             textColor: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookDetailPage(
+                    bookTitle: 'Book Ma...',
+                    authorName: 'Various Authors', // Dummy author
+                    imageUrl: 'assets/images/book_ma.jpg',
+                  ),
+                ),
+              );
+            },
           ),
+          SizedBox(width: 15),
         ],
       ),
     );
@@ -191,70 +304,82 @@ class _BookItem extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String author;
+  final String authorImageUrl; // Tambahkan ini
   final String price;
   final Color textColor;
   final Color secondaryTextColor;
+  final VoidCallback onTap;
+  final VoidCallback onAuthorTap; // Tambahkan ini
 
   const _BookItem({
     required this.imageUrl,
     required this.title,
     required this.author,
+    required this.authorImageUrl,
     required this.price,
     required this.textColor,
     required this.secondaryTextColor,
+    required this.onTap,
+    required this.onAuthorTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 150,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.network(
-              imageUrl,
-              height: 180,
-              width: 150,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        width: 150,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.asset( // Menggunakan Image.asset karena path lokal
+                imageUrl,
                 height: 180,
                 width: 150,
-                color: Colors.grey[300],
-                child: const Icon(Icons.broken_image, color: Colors.grey),
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  height: 180,
+                  width: 150,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.broken_image, color: Colors.grey),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: textColor,
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: textColor,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          Text(
-            author,
-            style: TextStyle(
-              color: secondaryTextColor,
-              fontSize: 14,
+            GestureDetector( // Wrap author name in GestureDetector
+              onTap: onAuthorTap,
+              child: Text(
+                author,
+                style: TextStyle(
+                  color: secondaryTextColor,
+                  fontSize: 14,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          Text(
-            price,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: textColor,
+            Text(
+              price,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: textColor,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -264,47 +389,52 @@ class _MostPopularItem extends StatelessWidget {
   final String imageUrl;
   final String title;
   final Color textColor;
+  final VoidCallback onTap;
 
   const _MostPopularItem({
     required this.imageUrl,
     required this.title,
     required this.textColor,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 150,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.network(
-              imageUrl,
-              height: 150,
-              width: 150,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        width: 150,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.asset( // Menggunakan Image.asset
+                imageUrl,
                 height: 150,
                 width: 150,
-                color: Colors.grey[300],
-                child: const Icon(Icons.broken_image, color: Colors.grey),
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  height: 150,
+                  width: 150,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.broken_image, color: Colors.grey),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: textColor,
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: textColor,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
