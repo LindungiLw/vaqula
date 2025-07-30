@@ -27,7 +27,6 @@ class NotificationPage extends StatelessWidget {
           TextButton(
             onPressed: () {
               print('Mark all as read tapped!');
-              // Implementasi logika mark all as read
             },
             child: Text(
               'mark all as read',

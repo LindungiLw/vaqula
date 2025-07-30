@@ -8,7 +8,7 @@ class WelcomingApp extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/cover/welcoming_cover_app.jpg', // <<< GANTI DENGAN PATH GAMBAR ASLI ANDA
+              'assets/cover/welcoming_cover_app.jpg',
               fit: BoxFit.cover,
             ),
           ),
@@ -47,7 +47,7 @@ class WelcomingApp extends StatelessWidget {
                       elevation: 8,
                     ),
                     child: Text(
-                      'start reading',
+                      'Start Reading',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,

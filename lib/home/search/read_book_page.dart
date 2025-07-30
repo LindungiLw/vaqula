@@ -15,11 +15,10 @@ class ReadBookPage extends StatefulWidget {
 }
 
 class _ReadBookPageState extends State<ReadBookPage> {
-  // Dummy state for reading progress, font size, etc.
   double _fontSize = 16.0;
-  bool _isDarkModeReading = false; // Could be controlled by global theme or specific to reading
+  bool _isDarkModeReading = false;
   int _currentPage = 1;
-  final int _totalPages = 35; // Example total pages
+  final int _totalPages = 35;
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +44,6 @@ class _ReadBookPageState extends State<ReadBookPage> {
               setState(() {
                 _isDarkModeReading = !_isDarkModeReading;
               });
-              // In a real app, you might want to switch the entire app's theme or a specific reading theme.
-              // For simplicity, this just toggles an internal state.
             },
           ),
           IconButton(
@@ -59,7 +56,6 @@ class _ReadBookPageState extends State<ReadBookPage> {
       ),
       body: Stack(
         children: [
-          // Background content (blurred image or solid color based on theme)
           Positioned.fill(
             child: Image.network(
               widget.imageUrl,
@@ -81,7 +77,7 @@ class _ReadBookPageState extends State<ReadBookPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'The Whispers', // Placeholder chapter title
+                  'The Whispers',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -101,7 +97,7 @@ class _ReadBookPageState extends State<ReadBookPage> {
               ],
             ),
           ),
-          // Bottom controls for font size, etc.
+
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(

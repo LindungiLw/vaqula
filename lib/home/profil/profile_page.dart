@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Import Provider
-import '../../untils/theme_provider.dart'; // Import ThemeProvider
+import 'package:provider/provider.dart';
+import '../../untils/theme_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -35,13 +35,12 @@ class _ProfilePageState extends State<ProfilePage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Profil berhasil diperbarui!')),
     );
-    // Tambahkan logika untuk menyimpan data ke database/state management
   }
 
   @override
   Widget build(BuildContext context) {
     final Color mainColor = Color(0xFFA05E1A);
-    final themeProvider = Provider.of<ThemeProvider>(context); // Access ThemeProvider
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -71,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 CircleAvatar(
                   radius: 60,
-                  backgroundImage: NetworkImage('https://via.placeholder.com/150'), // Ganti dengan gambar profil user
+                  backgroundImage: AssetImage('assets/profile/lindungi_profile.jpg'),
                   onBackgroundImageError: (exception, stackTrace) => const Icon(Icons.person, size: 60, color: Colors.grey),
                 ),
                 Positioned(
@@ -81,6 +80,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () {
                       print('Edit profile picture tapped!');
                       // Implement logic to pick new image
+                      // and update the profile picture
+
                     },
                     child: Container(
                       padding: const EdgeInsets.all(4),
@@ -97,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 20),
             Text(
-              'zahraa gamal',
+              'Rahma Lindungi Laowo',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -108,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
             _buildProfileInputField(
               context,
-              label: 'name',
+              label: 'profile name',
               controller: _nameController,
               icon: Icons.person_outline,
             ),
@@ -128,8 +129,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             _buildGenderDropdown(context),
 
-            const SizedBox(height: 20),
-            // Tombol Dark/Light Mode
+            SizedBox(height: 20),
+
             SwitchListTile(
               title: Text(
                 'Dark Mode',
@@ -164,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 elevation: 8,
               ),
               child: Text(
-                'update',
+                'Update',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,

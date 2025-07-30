@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../category/book_detail_page.dart'; // Untuk navigasi ke detail buku
+import '../category/book_detail_page.dart';
 
 class AuthorDetailPage extends StatefulWidget {
   final String authorName;
@@ -17,7 +17,7 @@ class AuthorDetailPage extends StatefulWidget {
 }
 
 class _AuthorDetailPageState extends State<AuthorDetailPage> {
-  bool _isFollowing = false; // Dummy state for follow button
+  bool _isFollowing = false;
 
   @override
   Widget build(BuildContext context) {

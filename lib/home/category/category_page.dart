@@ -60,7 +60,7 @@ class _CategoryPageState extends State<CategoryPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).iconTheme.color),
           onPressed: () {
-            Navigator.pop(context); // Kembali ke halaman sebelumnya
+            Navigator.pop(context);
           },
         ),
         title: Text(
@@ -135,7 +135,6 @@ class _CategoryPageState extends State<CategoryPage> {
           ),
         ),
       ),
-      // PENTING: TIDAK ADA bottomNavigationBar DI SINI!
     );
   }
 

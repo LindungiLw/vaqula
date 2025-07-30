@@ -20,7 +20,7 @@ class LoginPage extends StatelessWidget {
                   bottomRight: Radius.circular(30),
                 ),
                 child: Image.asset(
-                  'assets/images/book_top.jpg', // <<< GANTI DENGAN PATH GAMBAR ASLI ANDA
+                  'assets/cover/welcoming_cover_app.jpg',
                   height: 230,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -106,11 +106,11 @@ class LoginPage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset('assets/icons/facebook.png', height: 30), // <<< GANTI DENGAN PATH ASLI
+                        Image.asset('assets/cover/google_icon.png', height: 30),
                         SizedBox(width: 24),
-                        Image.asset('assets/icons/google.png', height: 30), // <<< GANTI DENGAN PATH ASLI
+                        Image.asset('assets/cover/google_icon.png', height: 30), // <<< GANTI DENGAN PATH ASLI
                         SizedBox(width: 24),
-                        Image.asset('assets/icons/twitter.png', height: 30), // <<< GANTI DENGAN PATH ASLI
+                        Image.asset('assets/cover/google_icon.png', height: 30), // <<< GANTI DENGAN PATH ASLI
                       ],
                     ),
 

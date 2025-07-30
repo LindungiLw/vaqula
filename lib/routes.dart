@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:voqula/cover/app_cover.dart';
 import 'package:voqula/cover/welcoming_app.dart';
-import 'package:voqula/home/main_home.dart';
 import 'package:voqula/home/main_screen.dart';
 import 'package:voqula/login/login_pages.dart';
 import 'package:voqula/login/sign_up.dart';
 import 'home/category/category_page.dart';
+import 'home/home/home.dart';
 import 'home/search/notification_page.dart';
-import 'home/search/profile_page.dart';
+import 'home/profil/profile_page.dart';
 import 'home/search/search_page.dart';
 
 final Map<String, WidgetBuilder> appRoutes = {
