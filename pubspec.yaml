@@ -11,13 +11,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_sign_in: ^7.1.0
+
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
   flutter_rating_bar: ^4.0.1
   provider: ^6.0.5
-  firebase_core: ^2.28.0
-  firebase_auth: ^4.18.0
+  firebase_core: ^4.0.0 # Update this line
+  firebase_auth: ^6.0.0 # Update this line
+  google_sign_in: ^6.1.0
   flutter_screenutil: ^5.9.3
 
 dev_dependencies:

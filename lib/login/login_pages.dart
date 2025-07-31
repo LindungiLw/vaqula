@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart'; // Hanya jika Anda menggunakan GoogleFonts secara eksplisit
+import 'package:google_fonts/google_fonts.dart'; // Import GoogleFonts
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -42,8 +42,8 @@ class LoginPage extends StatelessWidget {
                         filled: true,
                         fillColor: Colors.white,
                         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                        hintStyle: TextStyle(color: Colors.grey[400]),
-                        labelStyle: TextStyle(color: Colors.black),
+                        hintStyle: GoogleFonts.inter(color: Colors.grey[400]), // Applied Google Font
+                        labelStyle: GoogleFonts.poppins(color: Colors.black), // Applied Google Font
                       ),
                     ),
                     SizedBox(height: 16),
@@ -56,7 +56,7 @@ class LoginPage extends StatelessWidget {
                         filled: true,
                         fillColor: Colors.white,
                         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                        labelStyle: TextStyle(color: Colors.black),
+                        labelStyle: GoogleFonts.poppins(color: Colors.black), // Applied Google Font
                       ),
                     ),
 
@@ -68,7 +68,7 @@ class LoginPage extends StatelessWidget {
                         },
                         child: Text(
                           'Forgot Password?',
-                          style: TextStyle(color: Colors.grey[700]),
+                          style: GoogleFonts.inter(color: Colors.grey[700]), // Applied Google Font
                         ),
                       ),
                     ),
@@ -86,7 +86,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       child: Text(
                         'Login',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                        style: GoogleFonts.poppins(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600), // Applied Google Font
                       ),
                     ),
 
@@ -96,7 +96,7 @@ class LoginPage extends StatelessWidget {
                         Expanded(child: Divider()),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: Text('Or Log In With', style: TextStyle(color: Colors.black87)),
+                          child: Text('Or Log In With', style: GoogleFonts.inter(color: Colors.black87)), // Applied Google Font
                         ),
                         Expanded(child: Divider()),
                       ],
@@ -120,11 +120,11 @@ class LoginPage extends StatelessWidget {
                       child: RichText(
                         text: TextSpan(
                           text: "Don't Have Any Account? ",
-                          style: TextStyle(color: Colors.black),
+                          style: GoogleFonts.inter(color: Colors.black), // Applied Google Font
                           children: [
                             TextSpan(
                               text: 'Sign Up',
-                              style: TextStyle(
+                              style: GoogleFonts.inter( // Applied Google Font
                                 color: mainColor,
                                 fontWeight: FontWeight.bold,
                               ),

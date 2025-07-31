@@ -2,13 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:voqula/untils/theme_provider.dart';
 import 'package:voqula/routes.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // Import flutter_screenutil
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:firebase_core/firebase_core.dart'; // Import firebase_core
+import 'firebase_options.dart'; // Import the generated firebase_options.dart
+import 'package:voqula/services/firebase_service.dart'; // Import your FirebaseService
 
-void main() {
+// Make main function asynchronous to allow for Firebase initialization
+void main() async {
+  // Ensure that Flutter's widgets are initialized. This is crucial before
+  // any plugin-specific calls, like Firebase.initializeApp().
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase using your FirebaseService
+  await FirebaseService.initializeFirebase();
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
-      child: const MyApp(), // Make MyApp const since it's now wrapped
+      child: const MyApp(),
     ),
   );
 }
@@ -16,15 +27,16 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  // 4 ScreenUtilInit
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-    return ScreenUtilInit( // <--- Wrap your MaterialApp with ScreenUtilInit
-      designSize: const Size(360, 690), // <--- **IMPORTANT**: Set your design size here
-      minTextAdapt: true, // Optional: Adapts text size for smaller screens
-      splitScreenMode: true, // Optional: Supports split-screen mode
-      builder: (context, child) { // <--- Use builder to access ScreenUtil's context
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Voqula App',
@@ -133,8 +145,7 @@ class MyApp extends StatelessWidget {
           routes: appRoutes,
         );
       },
-      child: Container(), // <--- This child is passed to the builder's child. You can leave it empty or put a splash screen here.
-      // The actual initial route is handled by `initialRoute` and `routes`.
+      child: Container(),
     );
   }
 }

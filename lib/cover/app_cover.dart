@@ -11,7 +11,7 @@ class _AppCoverState extends State<AppCover> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 5), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,

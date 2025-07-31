@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:voqula/home/category/reviews_tab.dart';
 import '../search/read_book_page.dart';
 import 'about_book_tab.dart';
-import 'chapters_tab.dart'; // Import halaman baru
+import 'chapters_tab.dart';
 
 class BookDetailPage extends StatefulWidget {
   final String bookTitle;
