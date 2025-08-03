@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "496359542477",
+    "project_id": "flutter-project-927b4",
+    "storage_bucket": "flutter-project-927b4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:496359542477:android:a1a9218fff7024a47d2384",
+        "android_client_info": {
+          "package_name": "com.example.voqula"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "496359542477-jklbs7ia0r5pnfklqla5r9mv1srdl4mv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQF_fs1aXkOBf3wBgoGOvxogJiylB9wlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "496359542477-jklbs7ia0r5pnfklqla5r9mv1srdl4mv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
