@@ -16,9 +16,11 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    // Menambahkan listener untuk memperbarui kueri pencarian setiap kali teks berubah
     _searchController.addListener(_onSearchChanged);
   }
 
+  // Metode ini dipanggil setiap kali teks di kolom pencarian berubah
   void _onSearchChanged() {
     setState(() {
       _currentSearchQuery = _searchController.text;
@@ -28,7 +30,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
   @override
   void dispose() {
     _tabController.dispose();
-    _searchController.removeListener(_onSearchChanged);
+    _searchController.removeListener(_onSearchChanged); // Hapus listener
     _searchController.dispose();
     super.dispose();
   }
@@ -44,6 +46,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).iconTheme.color),
           onPressed: () {
+            // Tombol kembali ini akan pop SearchPage dari tumpukan navigasi
             Navigator.pop(context);
           },
         ),
@@ -61,30 +64,34 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Kolom Input Pencarian
             TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search Here',
-                  hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6)),
-                  border: InputBorder.none,
-                  prefixIcon: Icon(Icons.search, color: Theme.of(context).iconTheme.color?.withOpacity(0.6)),
-                  suffixIcon: _currentSearchQuery.isNotEmpty
-                      ? IconButton(
-                    icon: Icon(Icons.cancel, color: Theme.of(context).iconTheme.color?.withOpacity(0.6)),
-                    onPressed: () {
-                      _searchController.clear();
-                    },
-                  )
-                      : Icon(Icons.camera_alt, color: Theme.of(context).iconTheme.color?.withOpacity(0.6)),
-                ),
-                style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
-                onSubmitted: (value) {
-                  // Handle search submission
-                  print('Search submitted: $value');
-                },
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search Here',
+                hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6)),
+                border: InputBorder.none,
+                prefixIcon: Icon(Icons.search, color: Theme.of(context).iconTheme.color?.withOpacity(0.6)),
+                suffixIcon: _currentSearchQuery.isNotEmpty
+                    ? IconButton(
+                  icon: Icon(Icons.cancel, color: Theme.of(context).iconTheme.color?.withOpacity(0.6)),
+                  onPressed: () {
+                    _searchController.clear(); // Hapus teks pencarian
+                  },
+                )
+                    : Icon(Icons.camera_alt, color: Theme.of(context).iconTheme.color?.withOpacity(0.6)),
               ),
+              style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
+              onSubmitted: (value) {
+                // Ini dipanggil ketika pengguna menekan tombol 'Enter' atau 'Search' di keyboard
+                print('Search submitted: $value');
+                // Anda bisa menambahkan logika pencarian yang lebih kompleks di sini,
+                // misalnya memicu pencarian ke API eksternal.
+              },
+            ),
             const SizedBox(height: 20),
 
+            // Bagian Pencarian Populer
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -115,13 +122,16 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _buildPopularSearchItem(context, 'Travels', 'assets/popular/books/flutter_books.jpg'),                  _buildPopularSearchItem(context, 'Bambi\'s', 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg'),
-                  _buildPopularSearchItem(context, 'The Way', 'assets/popular/books/flutter_books.jpg'),
+                  // Menggunakan placeholder image URL untuk contoh
+                  _buildPopularSearchItem(context, 'Travels', 'https://placehold.co/90x120/E0E0E0/000000?text=Travels'),
+                  _buildPopularSearchItem(context, 'Bambi\'s', 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg'),
+                  _buildPopularSearchItem(context, 'The Way', 'https://placehold.co/90x120/E0E0E0/000000?text=The+Way'),
                 ],
               ),
             ),
             const SizedBox(height: 20),
 
+            // Bagian Pencarian Terbaru
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -137,7 +147,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                   icon: Icon(Icons.delete_outline, color: Colors.grey),
                   onPressed: () {
                     print('Clear recent searches tapped!');
-
+                    // TODO: Implement logika untuk menghapus pencarian terbaru
                   },
                 ),
               ],
@@ -156,6 +166,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
             ),
             const SizedBox(height: 20),
 
+            // TabBar untuk Buku dan Penulis
             TabBar(
               controller: _tabController,
               labelColor: mainColor,
@@ -168,12 +179,12 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
             ),
             const SizedBox(height: 10),
             SizedBox(
-              height: 400,
+              height: 400, // Anda mungkin perlu menyesuaikan tinggi ini agar konten tidak terpotong
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  _buildBooksResults(context),
-                  _buildAuthorsResults(context),
+                  _buildBooksResults(context), // Hasil buku akan difilter di sini
+                  _buildAuthorsResults(context), // Hasil penulis akan difilter di sini
                 ],
               ),
             ),
@@ -190,6 +201,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
+            // Menggunakan Image.network karena aset lokal tidak dapat diakses langsung oleh model
             child: Image.network(
               imageUrl,
               height: 120,
@@ -230,18 +242,23 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
       side: isSelected ? BorderSide(color: mainColor) : null,
       onSelected: (selected) {
         print('$tag ${selected ? 'selected' : 'unselected'}');
-
+        // TODO: Implement logika untuk pemilihan tag
       },
     );
   }
 
+  // Metode untuk membangun hasil pencarian buku
   Widget _buildBooksResults(BuildContext context) {
-
+    // Data buku hardcoded untuk contoh
     final List<Map<String, String>> books = [
       {'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg', 'title': 'Romantic Novel 1', 'author': 'Author A'},
       {'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg', 'title': 'Love Story', 'author': 'Author B'},
+      {'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg', 'title': 'Fantasy Realm', 'author': 'Author C'},
+      {'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg', 'title': 'Crime Thriller', 'author': 'Author D'},
+      {'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg', 'title': 'Fiction World', 'author': 'Author E'},
     ];
 
+    // Jika kueri pencarian kosong, tampilkan pesan awal
     if (_currentSearchQuery.isEmpty) {
       return Center(
         child: Text(
@@ -251,10 +268,12 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
       );
     }
 
+    // Filter buku berdasarkan kueri pencarian
     final filteredBooks = books.where((book) =>
     book['title']!.toLowerCase().contains(_currentSearchQuery.toLowerCase()) ||
         book['author']!.toLowerCase().contains(_currentSearchQuery.toLowerCase())).toList();
 
+    // Jika tidak ada buku yang cocok, tampilkan pesan
     if (filteredBooks.isEmpty) {
       return Center(
         child: Text(
@@ -265,6 +284,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
       );
     }
 
+    // Tampilkan daftar buku yang difilter
     return ListView.builder(
       itemCount: filteredBooks.length,
       itemBuilder: (context, index) {
@@ -304,7 +324,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
             trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).iconTheme.color),
             onTap: () {
               print('Tapped on book: ${book['title']}');
-
+              // TODO: Navigasi ke halaman detail buku
             },
           ),
         );
@@ -312,20 +332,21 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
     );
   }
 
+  // Metode untuk membangun hasil pencarian penulis
   Widget _buildAuthorsResults(BuildContext context) {
-
+    // Data penulis hardcoded untuk contoh
     final List<Map<String, dynamic>> authors = [
-      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Majji Rallf', 'books': 10, 'followers': 6.3, 'isFollowing': false, 'genre': 'romantic'},
-      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Marvin Edward', 'books': 15, 'followers': 8.3, 'isFollowing': false, 'genre': 'fiction'},
-      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Anne Blac', 'books': 8, 'followers': 4.0, 'isFollowing': true, 'genre': 'romantic'},
-      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Guy Ranvil', 'books': 12, 'followers': 5.0, 'isFollowing': true, 'genre': 'romantic crime'},
-      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Elena Mask', 'books': 7, 'followers': 3.5, 'isFollowing': false, 'genre': 'romantic fiction'},
-      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Brolklin Tarekk', 'books': 20, 'followers': 10.0, 'isFollowing': true, 'genre': 'romantic novel'},
-      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Annete Annte', 'books': 11, 'followers': 4.2, 'isFollowing': false, 'genre': 'romantic'},
-      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Rafy Simmonos', 'books': 9, 'followers': 3.8, 'isFollowing': true, 'genre': 'fantasy'},
-
+      {'imageUrl': 'https://placehold.co/50x50/E0E0E0/000000?text=Author1', 'name': 'Majji Rallf', 'books': 10, 'followers': 6.3, 'isFollowing': false, 'genre': 'romantic'},
+      {'imageUrl': 'https://placehold.co/50x50/E0E0E0/000000?text=Author2', 'name': 'Marvin Edward', 'books': 15, 'followers': 8.3, 'isFollowing': false, 'genre': 'fiction'},
+      {'imageUrl': 'https://placehold.co/50x50/E0E0E0/000000?text=Author3', 'name': 'Anne Blac', 'books': 8, 'followers': 4.0, 'isFollowing': true, 'genre': 'romantic'},
+      {'imageUrl': 'https://placehold.co/50x50/E0E0E0/000000?text=Author4', 'name': 'Guy Ranvil', 'books': 12, 'followers': 5.0, 'isFollowing': true, 'genre': 'romantic crime'},
+      {'imageUrl': 'https://placehold.co/50x50/E0E0E0/000000?text=Author5', 'name': 'Elena Mask', 'books': 7, 'followers': 3.5, 'isFollowing': false, 'genre': 'romantic fiction'},
+      {'imageUrl': 'https://placehold.co/50x50/E0E0E0/000000?text=Author6', 'name': 'Brolklin Tarekk', 'books': 20, 'followers': 10.0, 'isFollowing': true, 'genre': 'romantic novel'},
+      {'imageUrl': 'https://placehold.co/50x50/E0E0E0/000000?text=Author7', 'name': 'Annete Annte', 'books': 11, 'followers': 4.2, 'isFollowing': false, 'genre': 'romantic'},
+      {'imageUrl': 'https://placehold.co/50x50/E0E0E0/000000?text=Author8', 'name': 'Rafy Simmonos', 'books': 9, 'followers': 3.8, 'isFollowing': true, 'genre': 'fantasy'},
     ];
 
+    // Jika kueri pencarian kosong, tampilkan pesan awal
     if (_currentSearchQuery.isEmpty) {
       return Center(
         child: Text(
@@ -335,10 +356,12 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
       );
     }
 
+    // Filter penulis berdasarkan kueri pencarian
     final filteredAuthors = authors.where((author) =>
     author['name'].toLowerCase().contains(_currentSearchQuery.toLowerCase()) ||
         author['genre'].toLowerCase().contains(_currentSearchQuery.toLowerCase())).toList();
 
+    // Jika tidak ada penulis yang cocok, tampilkan pesan
     if (filteredAuthors.isEmpty) {
       return Center(
         child: Text(
@@ -349,6 +372,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
       );
     }
 
+    // Tampilkan daftar penulis yang difilter
     return ListView.builder(
       itemCount: filteredAuthors.length,
       itemBuilder: (context, index) {
@@ -391,6 +415,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
             trailing: ElevatedButton(
               onPressed: () {
                 print('${author['name']} follow/unfollow tapped!');
+                // TODO: Implement logika follow/unfollow
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: author['isFollowing'] ? Colors.grey : Color(0xFFA05E1A),
@@ -404,6 +429,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
             ),
             onTap: () {
               print('Tapped on author: ${author['name']}');
+              // TODO: Navigasi ke halaman detail penulis
             },
           ),
         );
