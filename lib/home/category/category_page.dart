@@ -55,8 +55,7 @@ class _CategoryPageState extends State<CategoryPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
-        // Tombol kembali di CategoryPage mungkin tidak selalu diperlukan jika hanya diakses dari BottomNav.
-        // Tapi jika bisa diakses langsung, ini akan kembali ke halaman sebelumnya.
+
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).iconTheme.color),
           onPressed: () {

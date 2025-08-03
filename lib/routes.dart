@@ -13,8 +13,8 @@ import 'home/search/search_page.dart';
 final Map<String, WidgetBuilder> appRoutes = {
   '/cover': (BuildContext context) => AppCover(),
   '/welcoming_cover': (BuildContext context) => WelcomingApp(),
-  '/signup': (BuildContext context) => SignupScreen(),
   '/login': (BuildContext context) => LoginPage(),
+  '/signup': (BuildContext context) => SignupScreen(),
   '/main_screen': (BuildContext context) => MainScreen(),
   '/home_tab': (BuildContext context) => HomePage(),
   '/category_tab': (BuildContext context) => CategoryPage(),

@@ -27,7 +27,7 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
-        leading: IconButton(
+        leading : IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).iconTheme.color),
           onPressed: () {
             Navigator.pop(context);
@@ -42,7 +42,7 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
           IconButton(
             icon: Icon(Icons.share, color: Theme.of(context).iconTheme.color),
             onPressed: () {
-              print('Share author tapped!');
+
             },
           ),
         ],
@@ -156,22 +156,22 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
   Widget _buildPopularBooksList(BuildContext context) {
     final List<Map<String, String>> popularBooks = [
       {
-        'imageUrl': 'assets/images/dragon_princess.jpg', // <<< Ganti dengan path asli
+        'imageUrl': 'assets/popular/mindfulness_journal.jpg',
         'title': 'The Dragon Princess',
-        'price': '\$50.00',
-        'author': widget.authorName, // Menggunakan nama penulis dari halaman ini
-      },
-      {
-        'imageUrl': 'assets/images/outsiders.jpg', // <<< Ganti dengan path asli
-        'title': 'Outsiders',
-        'price': '\$40.00',
+        'price': 'Rp 200.000',
         'author': widget.authorName,
       },
-      // Tambahkan lebih banyak buku jika diperlukan
+      {
+        'imageUrl': 'assets/popular/star_girl.jpg',
+        'title': 'Outsiders',
+        'price': 'Rp 80.00',
+        'author': widget.authorName,
+      },
+
     ];
 
     return SizedBox(
-      height: 250, // Sesuaikan tinggi sesuai kebutuhan
+      height: 250,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: popularBooks.length,

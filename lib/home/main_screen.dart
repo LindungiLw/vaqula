@@ -16,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   static final List<Widget> _widgetOptions = <Widget>[
-    const HomePage(),
+    HomePage(),
     CategoryPage(),
     SearchPage(),
     ProfilePage(),
@@ -60,7 +60,7 @@ class _MainScreenState extends State<MainScreen> {
                           IconButton(
                             icon: Icon(Icons.sort, color: Theme.of(context).iconTheme.color),
                             onPressed: () {
-                              // Handle sort/filter action
+                              print('Sort tapped!');
                             },
                           ),
                           IconButton(

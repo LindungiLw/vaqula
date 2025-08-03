@@ -3,17 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:voqula/untils/theme_provider.dart';
 import 'package:voqula/routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:firebase_core/firebase_core.dart'; // Import firebase_core
-import 'firebase_options.dart'; // Import the generated firebase_options.dart
-import 'package:voqula/services/firebase_service.dart'; // Import your FirebaseService
+import 'package:voqula/services/firebase_service.dart';
 
-// Make main function asynchronous to allow for Firebase initialization
 void main() async {
-  // Ensure that Flutter's widgets are initialized. This is crucial before
-  // any plugin-specific calls, like Firebase.initializeApp().
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize Firebase using your FirebaseService
   await FirebaseService.initializeFirebase();
 
   runApp(
@@ -27,7 +20,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // 4 ScreenUtilInit
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);

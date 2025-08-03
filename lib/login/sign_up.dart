@@ -19,18 +19,12 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _obscureConfirmPassword = true;
   bool _isLoading = false;
 
-  // Hapus inisialisasi langsung FirebaseAuth dan GoogleSignIn di sini
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
-  // final GoogleSignIn _googleSignIn = GoogleSignIn();
-
-  late final AuthService _authService; // Deklarasikan AuthService
+  late final AuthService _authService;
 
   @override
   void initState() {
     super.initState();
-    // Inisialisasi AuthService, lewati callback SnackBar
     _authService = AuthService(_showSnackBar);
-    // Hapus _initializeFirebase() di sini, karena sebaiknya di main.dart
   }
 
   @override
@@ -64,7 +58,6 @@ class _SignupScreenState extends State<SignupScreen> {
       _isLoading = true;
     });
 
-    // Panggil metode dari AuthService
     final user = await _authService.signUpWithEmailPassword(
       email: _emailController.text,
       password: _passwordController.text,
@@ -72,8 +65,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
 
     if (user != null) {
-      // Navigasi setelah pendaftaran berhasil
-      Navigator.pushReplacementNamed(context, '/main_screen');
+      Navigator.pushReplacementNamed(context, '/login');
     }
 
     setState(() {
@@ -86,12 +78,10 @@ class _SignupScreenState extends State<SignupScreen> {
       _isLoading = true;
     });
 
-    // Panggil metode dari AuthService
     final user = await _authService.signInWithGoogle();
 
     if (user != null) {
-      // Navigasi setelah login Google berhasil
-      Navigator.pushReplacementNamed(context, '/main_screen');
+      Navigator.pushReplacementNamed(context, '/login');
     }
 
     setState(() {
@@ -114,10 +104,8 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       backgroundColor: mainColor,
       body: SafeArea(
-        // Use Stack to layer the image and the form content
         child: Stack(
           children: [
-            // Background image (fills the top portion)
             Positioned(
               top: 0,
               left: 0,
@@ -142,9 +130,9 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ),
 
-            // Form content (positioned to overlap the image)
-            Positioned.fill( // Fills the available space, allowing scrolling
-              top: 230 - 25, // Image height (230) - overlap amount (25)
+
+            Positioned.fill(
+              top: 230 - 25,
               child: SingleChildScrollView(
                 child: Container(
                   decoration: BoxDecoration(
@@ -155,7 +143,6 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
-                  // Removed 'margin' property here, it's now handled by Positioned.fill's 'top'
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -250,7 +237,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         children: [
                           _buildSocialIcon(
                             context,
-                            'assets/icons/google_icon.png',
+                            'assets/cover/google_icon.png',
                             40,
                             _isLoading ? () {} : _signInWithGoogle,
                           ),

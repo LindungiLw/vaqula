@@ -36,7 +36,7 @@ class WelcomingApp extends StatelessWidget {
                   SizedBox(height: 80),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/signup');
+                      Navigator.pushReplacementNamed(context, '/login');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFb8792b),

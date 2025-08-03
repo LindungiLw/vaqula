@@ -35,7 +35,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    final Color mainColor = Color(0xFFA05E1A); // Definisi warna untuk konsistensi
+    final Color mainColor = Color(0xFFA05E1A);
 
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +44,6 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).iconTheme.color),
           onPressed: () {
-            // Ini akan keluar dari halaman pencarian, mungkin kembali ke home atau pop()
             Navigator.pop(context);
           },
         ),
@@ -62,15 +61,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Search Input
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(10.0),
-                border: Border.all(color: Colors.grey.withOpacity(0.3)),
-              ),
-              child: TextField(
+            TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
                   hintText: 'Search Here',
@@ -92,10 +83,8 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                   print('Search submitted: $value');
                 },
               ),
-            ),
             const SizedBox(height: 20),
 
-            // Popular Searches
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -126,15 +115,13 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _buildPopularSearchItem(context, 'Travels', 'https://cdn.pixabay.com/photo/2018/01/29/07/28/book-3115797_1280.jpg'),
-                  _buildPopularSearchItem(context, 'Bambi\'s', 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg'),
-                  _buildPopularSearchItem(context, 'The Way', 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg'),
+                  _buildPopularSearchItem(context, 'Travels', 'assets/popular/books/flutter_books.jpg'),                  _buildPopularSearchItem(context, 'Bambi\'s', 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg'),
+                  _buildPopularSearchItem(context, 'The Way', 'assets/popular/books/flutter_books.jpg'),
                 ],
               ),
             ),
             const SizedBox(height: 20),
 
-            // Recent Searched
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -150,15 +137,15 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
                   icon: Icon(Icons.delete_outline, color: Colors.grey),
                   onPressed: () {
                     print('Clear recent searches tapped!');
-                    // Implement clear functionality
+
                   },
                 ),
               ],
             ),
             const SizedBox(height: 10),
             Wrap(
-              spacing: 8.0, // gap between adjacent chips
-              runSpacing: 4.0, // gap between lines
+              spacing: 8.0,
+              runSpacing: 4.0,
               children: [
                 _buildSearchTag(context, 'Novel'),
                 _buildSearchTag(context, 'Fantasy'),
@@ -169,7 +156,6 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
             ),
             const SizedBox(height: 20),
 
-            // Books / Authors Tab Bar
             TabBar(
               controller: _tabController,
               labelColor: mainColor,
@@ -182,7 +168,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
             ),
             const SizedBox(height: 10),
             SizedBox(
-              height: 400, // Adjust height as needed
+              height: 400,
               child: TabBarView(
                 controller: _tabController,
                 children: [
@@ -235,7 +221,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
     return ChoiceChip(
       label: Text(tag),
       selected: isSelected,
-      selectedColor: mainColor.withOpacity(0.2), // Warna ketika terpilih
+      selectedColor: mainColor.withOpacity(0.2),
       backgroundColor: Theme.of(context).chipTheme.backgroundColor,
       labelStyle: TextStyle(
         color: isSelected ? mainColor : Theme.of(context).chipTheme.labelStyle?.color,
@@ -244,17 +230,16 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
       side: isSelected ? BorderSide(color: mainColor) : null,
       onSelected: (selected) {
         print('$tag ${selected ? 'selected' : 'unselected'}');
-        // Implementasi logika filter atau pencarian berdasarkan tag
+
       },
     );
   }
 
   Widget _buildBooksResults(BuildContext context) {
-    // Dummy data untuk hasil pencarian buku
+
     final List<Map<String, String>> books = [
       {'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg', 'title': 'Romantic Novel 1', 'author': 'Author A'},
       {'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg', 'title': 'Love Story', 'author': 'Author B'},
-      // Tambahkan lebih banyak data jika perlu
     ];
 
     if (_currentSearchQuery.isEmpty) {
@@ -266,7 +251,6 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
       );
     }
 
-    // Filter buku berdasarkan query (contoh sederhana)
     final filteredBooks = books.where((book) =>
     book['title']!.toLowerCase().contains(_currentSearchQuery.toLowerCase()) ||
         book['author']!.toLowerCase().contains(_currentSearchQuery.toLowerCase())).toList();
@@ -320,7 +304,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
             trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).iconTheme.color),
             onTap: () {
               print('Tapped on book: ${book['title']}');
-              // Navigator.push untuk detail buku jika ada
+
             },
           ),
         );
@@ -329,17 +313,17 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
   }
 
   Widget _buildAuthorsResults(BuildContext context) {
-    // Dummy data untuk hasil pencarian penulis
+
     final List<Map<String, dynamic>> authors = [
-      {'imageUrl': 'https://via.placeholder.com/150', 'name': 'Majji Rallf', 'books': 10, 'followers': 6.3, 'isFollowing': false, 'genre': 'romantic'},
-      {'imageUrl': 'https://via.placeholder.com/150', 'name': 'Marvin Edward', 'books': 15, 'followers': 8.3, 'isFollowing': false, 'genre': 'fiction'},
-      {'imageUrl': 'https://via.placeholder.com/150', 'name': 'Anne Blac', 'books': 8, 'followers': 4.0, 'isFollowing': true, 'genre': 'romantic'},
-      {'imageUrl': 'https://via.placeholder.com/150', 'name': 'Guy Ranvil', 'books': 12, 'followers': 5.0, 'isFollowing': true, 'genre': 'romantic crime'},
-      {'imageUrl': 'https://via.placeholder.com/150', 'name': 'Elena Mask', 'books': 7, 'followers': 3.5, 'isFollowing': false, 'genre': 'romantic fiction'},
-      {'imageUrl': 'https://via.placeholder.com/150', 'name': 'Brolklin Tarekk', 'books': 20, 'followers': 10.0, 'isFollowing': true, 'genre': 'romantic novel'},
-      {'imageUrl': 'https://via.placeholder.com/150', 'name': 'Annete Annte', 'books': 11, 'followers': 4.2, 'isFollowing': false, 'genre': 'romantic'},
-      {'imageUrl': 'https://via.placeholder.com/150', 'name': 'Rafy Simmonos', 'books': 9, 'followers': 3.8, 'isFollowing': true, 'genre': 'fantasy'},
-      // Tambahkan lebih banyak data jika perlu
+      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Majji Rallf', 'books': 10, 'followers': 6.3, 'isFollowing': false, 'genre': 'romantic'},
+      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Marvin Edward', 'books': 15, 'followers': 8.3, 'isFollowing': false, 'genre': 'fiction'},
+      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Anne Blac', 'books': 8, 'followers': 4.0, 'isFollowing': true, 'genre': 'romantic'},
+      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Guy Ranvil', 'books': 12, 'followers': 5.0, 'isFollowing': true, 'genre': 'romantic crime'},
+      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Elena Mask', 'books': 7, 'followers': 3.5, 'isFollowing': false, 'genre': 'romantic fiction'},
+      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Brolklin Tarekk', 'books': 20, 'followers': 10.0, 'isFollowing': true, 'genre': 'romantic novel'},
+      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Annete Annte', 'books': 11, 'followers': 4.2, 'isFollowing': false, 'genre': 'romantic'},
+      {'imageUrl': 'assets/cover/cover_app.jpg', 'name': 'Rafy Simmonos', 'books': 9, 'followers': 3.8, 'isFollowing': true, 'genre': 'fantasy'},
+
     ];
 
     if (_currentSearchQuery.isEmpty) {
@@ -351,7 +335,6 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
       );
     }
 
-    // Filter penulis berdasarkan query (contoh sederhana)
     final filteredAuthors = authors.where((author) =>
     author['name'].toLowerCase().contains(_currentSearchQuery.toLowerCase()) ||
         author['genre'].toLowerCase().contains(_currentSearchQuery.toLowerCase())).toList();
@@ -390,7 +373,7 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${author['genre']}', // Contoh genre
+                  '${author['genre']}',
                   style: TextStyle(
                     color: Theme.of(context).textTheme.bodySmall?.color,
                     fontSize: 12,
@@ -408,7 +391,6 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
             trailing: ElevatedButton(
               onPressed: () {
                 print('${author['name']} follow/unfollow tapped!');
-                // Implement follow/unfollow logic
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: author['isFollowing'] ? Colors.grey : Color(0xFFA05E1A),
@@ -422,7 +404,6 @@ class _SearchPageState extends State<SearchPage> with SingleTickerProviderStateM
             ),
             onTap: () {
               print('Tapped on author: ${author['name']}');
-              // Navigator.push untuk detail penulis jika ada
             },
           ),
         );

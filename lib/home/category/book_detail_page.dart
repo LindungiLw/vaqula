@@ -137,7 +137,7 @@ class _BookDetailPageState extends State<BookDetailPage> with SingleTickerProvid
               controller: _tabController,
               labelColor: Theme.of(context).textTheme.bodyLarge?.color,
               unselectedLabelColor: Theme.of(context).textTheme.bodySmall?.color,
-              indicatorColor: Color(0xFFb8792b), // Match primary button color
+              indicatorColor: Color(0xFFb8792b),
               tabs: const [
                 Tab(text: 'About Book'),
                 Tab(text: 'Chapters'),
@@ -145,7 +145,7 @@ class _BookDetailPageState extends State<BookDetailPage> with SingleTickerProvid
               ],
             ),
             SizedBox(
-              height: 500, // Sesuaikan tinggi ini sesuai kebutuhan Anda
+              height: 500,
               child: TabBarView(
                 controller: _tabController,
                 children: [

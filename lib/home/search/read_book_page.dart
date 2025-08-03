@@ -60,7 +60,7 @@ class _ReadBookPageState extends State<ReadBookPage> {
             child: Image.network(
               widget.imageUrl,
               fit: BoxFit.cover,
-              color: Colors.black.withOpacity(_isDarkModeReading ? 0.7 : 0.0), // Overlay for dark mode
+              color: Colors.black.withOpacity(_isDarkModeReading ? 0.7 : 0.0),
               colorBlendMode: BlendMode.darken,
               errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey[300]),
             ),
@@ -93,7 +93,7 @@ class _ReadBookPageState extends State<ReadBookPage> {
                     color: _isDarkModeReading ? Colors.white70 : Colors.black87,
                   ),
                 ),
-                const SizedBox(height: 100), // Space for controls at the bottom
+                const SizedBox(height: 100),
               ],
             ),
           ),

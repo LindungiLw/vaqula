@@ -10,9 +10,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final TextEditingController _nameController = TextEditingController(text: 'zahraa gamal');
-  final TextEditingController _phoneController = TextEditingController(text: '0106245464');
-  final TextEditingController _emailController = TextEditingController(text: 'ashaimaa@gmail.com');
+  final TextEditingController _nameController = TextEditingController(text: 'Rahma Lindungi Laowo');
+  final TextEditingController _phoneController = TextEditingController(text: '082216375651');
+  final TextEditingController _emailController = TextEditingController(text: 'rahma23@jiu.ac');
   String? _selectedGender;
 
   final List<String> _genders = ['Male', 'Female', 'Other'];
@@ -79,9 +79,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: GestureDetector(
                     onTap: () {
                       print('Edit profile picture tapped!');
-                      // Implement logic to pick new image
-                      // and update the profile picture
-
                     },
                     child: Container(
                       padding: const EdgeInsets.all(4),

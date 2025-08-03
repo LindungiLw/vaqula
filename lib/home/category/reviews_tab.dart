@@ -18,7 +18,7 @@ class ReviewsTab extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Review(1)', // Ganti dengan jumlah review sebenarnya
+                'Review(1)',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -27,7 +27,7 @@ class ReviewsTab extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  // Navigasi ke halaman tambah review
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -74,21 +74,19 @@ class ReviewsTab extends StatelessWidget {
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
-              Icon(Icons.tune, color: Theme.of(context).iconTheme.color), // Ikon filter
+              Icon(Icons.tune, color: Theme.of(context).iconTheme.color),
             ],
           ),
           const SizedBox(height: 15),
-          // Daftar review (contoh 1 review)
           _buildReviewItem(
             context,
-            imageUrl: 'https://via.placeholder.com/150', // Ganti dengan gambar profil user
+            imageUrl: 'https://via.placeholder.com/150',
             userName: 'Date Thief',
             timeAgo: '11 Months Ago',
             rating: 4.0,
             reviewText: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s. It has survived not only five centuries.',
           ),
           const SizedBox(height: 20),
-          // Tombol "Buy Now" - bisa saja berada di layout yang berbeda jika sesuai dengan desain Anda
           Center(
             child: ElevatedButton(
               onPressed: () {

@@ -8,21 +8,21 @@ class BookData {
       title: 'The Book Thief',
       author: 'Corinne Sweet',
       authorImageUrl: 'assets/images/corinne_sweet_author.jpg',
-      price: '\$56.00',
+      price: 'Rp 200.000',
     ),
     Book(
       imageUrl: 'assets/books/the_whispers.jpg',
       title: 'The Whispers',
       author: 'Greg Howard',
       authorImageUrl: 'assets/books/the_whispers.jpg',
-      price: '\$33',
+      price: 'Rp 80.000',
     ),
     Book(
       imageUrl: 'assets/books/weird_girl.jpg',
       title: 'Weird Girl',
       author: 'Corinne Sweet',
       authorImageUrl: 'assets/images/corinne_sweet_author.jpg',
-      price: '\$44.00',
+      price: 'Rp 150.000',
     )
   ];
 

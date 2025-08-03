@@ -1,16 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter/material.dart'; // Diperlukan untuk SnackBar dan context
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  // Callback untuk menampilkan SnackBar
   final Function(String) _showSnackBarCallback;
 
   AuthService(this._showSnackBarCallback);
 
+  /// Handles user registration with email and password.
+  /// Displays appropriate snackbar messages for success or failure.
   Future<User?> signUpWithEmailPassword({
     required String email,
     required String password,
@@ -22,7 +22,9 @@ class AuthService {
         password: password.trim(),
       );
 
+      // Update display name for the newly created user
       await userCredential.user?.updateDisplayName(displayName.trim());
+      // Reload user to get the updated display name
       await userCredential.user?.reload();
       final User? updatedUser = _auth.currentUser;
 
@@ -38,6 +40,8 @@ class AuthService {
         errorMessage = 'Password terlalu lemah.';
       } else if (e.code == 'email-already-in-use') {
         errorMessage = 'Email sudah terdaftar.';
+      } else if (e.code == 'invalid-email') {
+        errorMessage = 'Email tidak valid.';
       } else {
         errorMessage = 'Terjadi kesalahan saat pendaftaran: ${e.message}';
       }
@@ -50,6 +54,51 @@ class AuthService {
     }
   }
 
+  /// Handles user sign-in with email and password.
+  /// Displays appropriate snackbar messages for success or failure.
+  Future<User?> signInWithEmailPassword({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email.trim(),
+        password: password.trim(),
+      );
+
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        print('Signed In: ${user.displayName} (${user.email})');
+        _showSnackBarCallback('Berhasil login sebagai ${user.displayName ?? user.email}!');
+        return user;
+      }
+      return null;
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      if (e.code == 'user-not-found') {
+        errorMessage = 'Tidak ada pengguna dengan email tersebut.';
+      } else if (e.code == 'wrong-password') {
+        errorMessage = 'Password salah.';
+      } else if (e.code == 'invalid-email') {
+        errorMessage = 'Email tidak valid.';
+      } else if (e.code == 'user-disabled') {
+        errorMessage = 'Akun pengguna ini telah dinonaktifkan.';
+      }
+      else {
+        errorMessage = 'Terjadi kesalahan saat login: ${e.message}';
+      }
+      _showSnackBarCallback(errorMessage);
+      return null;
+    } catch (e) {
+      print('Error signing in: $e');
+      _showSnackBarCallback('Terjadi kesalahan tidak terduga.');
+      return null;
+    }
+  }
+
+  /// Handles user sign-in with Google.
+  /// Displays appropriate snackbar messages for success or failure.
   Future<User?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
@@ -87,4 +136,19 @@ class AuthService {
       return null;
     }
   }
+
+  /// Handles user sign-out.
+  Future<void> signOut() async {
+    try {
+      await _auth.signOut();
+      await _googleSignIn.signOut(); // Also sign out from Google if signed in via Google
+      _showSnackBarCallback('Berhasil keluar.');
+    } catch (e) {
+      print('Error signing out: $e');
+      _showSnackBarCallback('Terjadi kesalahan saat keluar.');
+    }
+  }
+
+  /// Provides a stream of the current user's authentication state.
+  Stream<User?> get user => _auth.authStateChanges();
 }
