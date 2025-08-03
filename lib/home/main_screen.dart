@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:voqula/home/search/notification_page.dart';
 import 'package:voqula/home/profil/profile_page.dart';
-import 'package:voqula/home/search/search_page.dart';
-import 'category/category_page.dart';
-import 'home/home.dart';
+import 'package:voqula/home/category/category_page.dart';
+import 'package:voqula/home/home/home.dart';
+import 'package:voqula/home/search/search_page.dart'; // Import SearchPage untuk navigasi
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -15,11 +15,11 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
+  // Daftar widget yang diperbarui untuk BottomNavigationBar (hanya 3 tab)
   static final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     CategoryPage(),
-    SearchPage(),
-    ProfilePage(),
+    ProfilePage(), // ProfilePage sekarang di indeks 2
   ];
 
   void _onItemTapped(int index) {
@@ -31,7 +31,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     PreferredSizeWidget? currentAppBar;
-    if (_selectedIndex == 0) {
+    if (_selectedIndex == 0) { // AppBar untuk HomePage
       currentAppBar = PreferredSize(
         preferredSize: const Size.fromHeight(120.0),
         child: AppBar(
@@ -72,26 +72,39 @@ class _MainScreenState extends State<MainScreen> {
                               );
                             },
                           ),
+                          // Tidak perlu ikon pencarian terpisah di sini,
+                          // karena TextField di bawah akan menangani navigasi ke SearchPage
                         ],
                       ),
                     ],
                   ),
 
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search Here',
-                        hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6)),
-                        border: InputBorder.none,
-                        prefixIcon: Icon(Icons.search, color: Theme.of(context).iconTheme.color?.withOpacity(0.6)),
-                        suffixIcon: Icon(Icons.camera_alt, color: Theme.of(context).iconTheme.color?.withOpacity(0.6)),
+                  // GestureDetector agar TextField dapat diketuk untuk membuka SearchPage
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SearchPage()),
+                      );
+                    },
+                    child: AbsorbPointer( // Mencegah TextField langsung diedit di sini
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Search Here',
+                            hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6)),
+                            border: InputBorder.none,
+                            prefixIcon: Icon(Icons.search, color: Theme.of(context).iconTheme.color?.withOpacity(0.6)),
+                            suffixIcon: Icon(Icons.camera_alt, color: Theme.of(context).iconTheme.color?.withOpacity(0.6)),
+                          ),
+                          style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
+                        ),
                       ),
-                      style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
                     ),
                   ),
                 ],
@@ -119,10 +132,6 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.book_outlined),
             label: 'Category',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
