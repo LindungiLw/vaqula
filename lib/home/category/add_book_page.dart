@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'book_data.dart';
 
 class AddBookPage extends StatefulWidget {
-  // Callback untuk meneruskan data buku yang baru ditambahkan
   final Function(Map<String, String>) onBookAdded;
 
   const AddBookPage({Key? key, required this.onBookAdded}) : super(key: key);
@@ -17,10 +16,8 @@ class _AddBookPageState extends State<AddBookPage> {
   final TextEditingController _authorController = TextEditingController();
   final TextEditingController _imageUrlController = TextEditingController();
 
-  String? _selectedCategory; // Kategori yang dipilih
-
-  // Daftar kategori yang sama dengan CategoryPage, sekarang diambil dari data global
-  final List<String> _categories = categoriesList.sublist(1); // Exclude 'All' for input
+  String? _selectedCategory;
+  final List<String> _categories = categoriesList.sublist(1);
 
   @override
   void dispose() {
@@ -43,13 +40,13 @@ class _AddBookPageState extends State<AddBookPage> {
         'title': _titleController.text.trim(),
         'author': _authorController.text.trim(),
         'imageUrl': _imageUrlController.text.trim().isEmpty
-            ? 'https://placehold.co/120x150/E0E0E0/000000?text=No+Image' // Placeholder jika URL kosong
+            ? 'https://placehold.co/120x150/E0E0E0/000000?text=No+Image'
             : _imageUrlController.text.trim(),
         'category': _selectedCategory!,
       };
 
-      widget.onBookAdded(newBook); // Panggil callback untuk meneruskan data
-      Navigator.pop(context); // Kembali ke halaman sebelumnya
+      widget.onBookAdded(newBook);
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Book added successfully!')),
       );

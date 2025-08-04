@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import '../category/book_detail_page.dart';
-
 class ViewAllBooksPage extends StatelessWidget {
-  final String title;
-  final List<Map<String, String>> books;
+  final String title; // Judul halaman (misal: "Best Selling Books")
+  final List<Map<String, String>> books; // Daftar buku yang akan ditampilkan
 
   const ViewAllBooksPage({
     Key? key,
@@ -25,13 +24,13 @@ class ViewAllBooksPage extends StatelessWidget {
           },
         ),
         title: Text(
-          title,
+          title, // Judul AppBar adalah judul yang diterima
           style: TextStyle(
             color: Theme.of(context).textTheme.bodyLarge?.color,
             fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: true,
+        centerTitle: true, // Judul di tengah
       ),
       body: books.isEmpty
           ? Center(
@@ -52,7 +51,7 @@ class ViewAllBooksPage extends StatelessWidget {
             child: ListTile(
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(4.0),
-                child: Image.network(
+                child: Image.asset( // Menggunakan Image.asset
                   book['imageUrl']!,
                   width: 50,
                   height: 70,
@@ -87,6 +86,7 @@ class ViewAllBooksPage extends StatelessWidget {
                       bookTitle: book['title']!,
                       authorName: book['author']!,
                       imageUrl: book['imageUrl']!,
+                      authorImageUrl: book['authorImageUrl'], // Teruskan authorImageUrl
                     ),
                   ),
                 );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:voqula/home/category/book_detail_page.dart';
 import 'package:voqula/home/home/view_all_books_page.dart';
-import '../search/author_detail_page.dart';
-import 'book_data.dart' as BookData;
+import 'package:voqula/home/search/author_detail_page.dart';
+import 'book_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,10 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Asumsikan _bestSellingBooks dan _mostPopularBooks sekarang adalah List<Map<String, String>>
-  // Jika tidak, Anda perlu mengonversinya sebelum meneruskan ke ViewAllBooksPage
-  final List<Map<String, String>> _bestSellingBooks = BookData.bestSellingBooks;
-  final List<Map<String, String>> _mostPopularBooks = BookData.mostPopularBooks;
+  final List<Map<String, String>> _bestSellingBooks = bestSellingBooks;
+  final List<Map<String, String>> _mostPopularBooks = mostPopularBooks;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +74,6 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
 
   Widget _buildSectionHeader(BuildContext context, String title) {
     return Row(
@@ -154,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                       imageUrl: book['imageUrl']!,
                       title: book['title']!,
                       author: book['author']!,
-                      authorImageUrl: book['authorImageUrl'] ?? 'https://placehold.co/50x50/E0E0E0/000000?text=Author', // Gunakan placeholder
+                      authorImageUrl: book['authorImageUrl'] ?? 'assets/authors/author_placeholder.jpg', // Default asset
                       price: book['price'] ?? 'N/A',
                       textColor: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
                       secondaryTextColor: Theme.of(context).textTheme.bodySmall?.color ?? Colors.grey,
@@ -166,6 +163,7 @@ class _HomePageState extends State<HomePage> {
                               bookTitle: book['title']!,
                               authorName: book['author']!,
                               imageUrl: book['imageUrl']!,
+                              authorImageUrl: book['authorImageUrl'], // Teruskan authorImageUrl
                             ),
                           ),
                         );
@@ -176,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                           MaterialPageRoute(
                             builder: (context) => AuthorDetailPage(
                               authorName: book['author']!,
-                              imageUrl: book['authorImageUrl'] ?? 'https://placehold.co/50x50/E0E0E0/000000?text=Author',
+                              imageUrl: book['authorImageUrl'] ?? 'assets/authors/author_placeholder.jpg', // Default asset
                             ),
                           ),
                         );
@@ -211,8 +209,9 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(
                     builder: (context) => BookDetailPage(
                       bookTitle: popularBook['title']!,
-                      authorName: popularBook['author'] ?? 'Various Authors', // Pastikan ada author di Map
+                      authorName: popularBook['author'] ?? 'Various Authors',
                       imageUrl: popularBook['imageUrl']!,
+                      authorImageUrl: popularBook['authorImageUrl'], // Teruskan authorImageUrl
                     ),
                   ),
                 );
@@ -225,7 +224,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// Ubah _BookItem dan _MostPopularItem untuk menerima Map<String, String>
 class _BookItem extends StatelessWidget {
   final String imageUrl;
   final String title;
@@ -260,7 +258,7 @@ class _BookItem extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset(
+              child: Image.asset( // Menggunakan Image.asset
                 imageUrl,
                 height: 180,
                 width: 150,
@@ -337,7 +335,7 @@ class _MostPopularItem extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset(
+              child: Image.asset( // Menggunakan Image.asset
                 imageUrl,
                 height: 150,
                 width: 150,

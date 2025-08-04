@@ -1,10 +1,8 @@
-// lib/data/categories/romance_books.dart
-
 final List<Map<String, String>> romanceBooksData = [
   {
-    'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg',
+    'imageUrl': 'assets/books/best_selling/you_be_home.jpg',
     'title': 'You Be Home',
-    'author': 'Author Name',
+    'author': 'Kathleen Glasgow',
     'category': 'Romance',
   },
   {
@@ -13,5 +11,4 @@ final List<Map<String, String>> romanceBooksData = [
     'author': 'Romantic Writer',
     'category': 'Romance',
   },
-  // Tambahkan lebih banyak buku 'Romance' di sini
 ];

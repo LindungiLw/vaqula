@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import '../home/book_data.dart';
 import '../home/view_all_books_page.dart';
 import 'add_book_page.dart';
-import 'book_data/book_data.dart';
+import 'book_data/horror_books.dart';
 import 'book_data/fantasy_books.dart';
 import 'book_data/fiction_books.dart';
 import 'book_data/new_books.dart';
 import 'book_data/romance_books.dart';
 import 'book_data/sci_fi_books.dart';
 import 'book_data/thriller_books.dart';
-import 'book_detail_page.dart';
+import 'book_detail_page.dart'; // Import halaman ViewAllBooksPage
+
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({Key? key}) : super(key: key);
@@ -19,26 +20,30 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
+  // Daftar kategori, sekarang diambil dari file terpisah
   final List<String> _categories = categoriesList;
 
+  // Data buku utama, akan digabungkan dari semua file kategori
   List<Map<String, String>> _allBookList = [];
 
+  // List yang akan ditampilkan setelah difilter oleh kategori atau pencarian
   List<Map<String, String>> _filteredBooksForDisplay = [];
 
   final TextEditingController _searchController = TextEditingController();
   String _currentSearchQuery = '';
-  int _selectedCategoryIndex = 0;
+  int _selectedCategoryIndex = 0; // Indeks kategori yang dipilih, default ke 'All' (indeks 0)
 
   @override
   void initState() {
     super.initState();
-    _loadAllBooks();
+    _loadAllBooks(); // Panggil metode untuk memuat dan menggabungkan semua buku
     _searchController.addListener(_onSearchChanged);
-    _filterBooks();
+    _filterBooks(); // Inisialisasi daftar buku saat pertama kali dimuat
   }
 
+  // Metode untuk memuat dan menggabungkan semua buku dari file-file terpisah
   void _loadAllBooks() {
-    _allBookList = [];
+    _allBookList = []; // Pastikan list kosong sebelum diisi
     _allBookList.addAll(newBooksData);
     _allBookList.addAll(fantasyBooksData);
     _allBookList.addAll(fictionBooksData);
@@ -46,31 +51,36 @@ class _CategoryPageState extends State<CategoryPage> {
     _allBookList.addAll(romanceBooksData);
     _allBookList.addAll(sciFiBooksData);
     _allBookList.addAll(thrillerBooksData);
+    // Anda bisa menambahkan logika untuk menghapus duplikasi jika diperlukan
+    // Misalnya: _allBookList = _allBookList.toSet().toList(); jika buku memiliki ID unik
   }
 
+  // Metode untuk memperbarui kueri pencarian dan memfilter buku
   void _onSearchChanged() {
     setState(() {
       _currentSearchQuery = _searchController.text;
-      _filterBooks();
+      _filterBooks(); // Panggil filter setiap kali kueri berubah
     });
   }
 
+  // Metode untuk memfilter daftar buku berdasarkan kategori dan/atau kueri pencarian
   void _filterBooks() {
-    List<Map<String, String>> tempBooks = List.from(_allBookList);
+    List<Map<String, String>> tempBooks = List.from(_allBookList); // Mulai dengan semua buku
 
-    if (_selectedCategoryIndex > 0) {
+    // 1. Filter berdasarkan kategori yang dipilih (jika bukan 'All')
+    if (_selectedCategoryIndex > 0) { // Jika bukan 'All' (indeks 0)
       final selectedCategoryName = _categories[_selectedCategoryIndex];
       tempBooks = tempBooks.where((book) =>
       book['category']!.toLowerCase() == selectedCategoryName.toLowerCase()).toList();
     }
 
-
+    // 2. Filter berdasarkan kueri pencarian (selalu berlaku jika ada)
     if (_currentSearchQuery.isNotEmpty) {
       final query = _currentSearchQuery.toLowerCase();
       tempBooks = tempBooks.where((book) =>
       book['title']!.toLowerCase().contains(query) ||
           book['author']!.toLowerCase().contains(query) ||
-          book['category']!.toLowerCase().contains(query)
+          book['category']!.toLowerCase().contains(query) // Mencari juga di kategori
       ).toList();
     }
 
@@ -79,6 +89,7 @@ class _CategoryPageState extends State<CategoryPage> {
     });
   }
 
+  // Callback yang akan dipanggil dari AddBookPage ketika buku baru ditambahkan
   void _onNewBookAdded(Map<String, String> newBook) {
     setState(() {
       _allBookList.add(newBook);
@@ -98,19 +109,19 @@ class _CategoryPageState extends State<CategoryPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         title: Text(
           'Category',
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Theme.of(context).textTheme.bodyLarge?.color,
-              fontWeight: FontWeight.bold
+              fontWeight: FontWeight.bold // Pastikan bold
           ),
         ),
-        centerTitle: true,
+        centerTitle: true, // Judul AppBar di tengah
         elevation: 0,
       ),
-      body: Column(
+      body: Column( // Menggunakan Column agar bisa menggabungkan berbagai widget
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
@@ -118,15 +129,15 @@ class _CategoryPageState extends State<CategoryPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
+                // Kolom Input Pencarian
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText: 'Search Here',
                     hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6)),
-                    border: OutlineInputBorder(
+                    border: OutlineInputBorder( // Menggunakan OutlineInputBorder untuk tampilan yang lebih jelas
                       borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
+                      borderSide: BorderSide.none, // Hapus border default
                     ),
                     filled: true,
                     fillColor: Theme.of(context).cardColor, // Menggunakan warna card untuk background
@@ -346,6 +357,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       bookTitle: book['title']!,
                       authorName: book['author']!,
                       imageUrl: book['imageUrl']!,
+                      authorImageUrl: book['authorImageUrl'], // Teruskan authorImageUrl
                     ),
                   ),
                 );
@@ -357,7 +369,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
-                      child: Image.network(
+                      child: Image.asset( // Menggunakan Image.asset
                         book['imageUrl']!,
                         height: 150,
                         width: 120,
@@ -438,7 +450,7 @@ class _CategoryPageState extends State<CategoryPage> {
           child: ListTile(
             leading: ClipRRect(
               borderRadius: BorderRadius.circular(4.0),
-              child: Image.network(
+              child: Image.asset( // Menggunakan Image.asset
                 book['imageUrl']!,
                 width: 50,
                 height: 70,
@@ -473,6 +485,7 @@ class _CategoryPageState extends State<CategoryPage> {
                     bookTitle: book['title']!,
                     authorName: book['author']!,
                     imageUrl: book['imageUrl']!,
+                    authorImageUrl: book['authorImageUrl'], // Teruskan authorImageUrl
                   ),
                 ),
               );

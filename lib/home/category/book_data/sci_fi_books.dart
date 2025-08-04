@@ -13,5 +13,5 @@ final List<Map<String, String>> sciFiBooksData = [
     'author': 'John Smith',
     'category': 'Sci-Fi',
   },
-  // Tambahkan lebih banyak buku 'Sci-Fi' di sini
+
 ];
