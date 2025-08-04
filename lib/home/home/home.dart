@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:voqula/home/home/popular_book.dart';
-import 'package:voqula/home/search/author_detail_page.dart';
 import 'package:voqula/home/category/book_detail_page.dart';
-import 'book.dart';
-import 'book_data.dart';
+import 'package:voqula/home/home/view_all_books_page.dart';
+import '../search/author_detail_page.dart';
+import 'book_data.dart' as BookData;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -13,10 +12,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Book> _bestSellingBooks = BookData.bestSellingBooks;
-  final List<PopularBook> _mostPopularBooks = BookData.mostPopularBooks;
+  // Asumsikan _bestSellingBooks dan _mostPopularBooks sekarang adalah List<Map<String, String>>
+  // Jika tidak, Anda perlu mengonversinya sebelum meneruskan ke ViewAllBooksPage
+  final List<Map<String, String>> _bestSellingBooks = BookData.bestSellingBooks;
+  final List<Map<String, String>> _mostPopularBooks = BookData.mostPopularBooks;
 
-  //2. Layout Builder
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -92,8 +92,27 @@ class _HomePageState extends State<HomePage> {
         ),
         TextButton(
           onPressed: () {
-            print('More $title tapped!');
-            // TODO: Implement navigation to a "View All" screen for this category
+            if (title == 'Best Selling Books') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViewAllBooksPage(
+                    title: 'Best Selling Books',
+                    books: _bestSellingBooks,
+                  ),
+                ),
+              );
+            } else if (title == 'Most Popular') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViewAllBooksPage(
+                    title: 'Most Popular Books',
+                    books: _mostPopularBooks,
+                  ),
+                ),
+              );
+            }
           },
           child: Row(
             children: [
@@ -121,7 +140,7 @@ class _HomePageState extends State<HomePage> {
       height: 250,
       child: LayoutBuilder(
           builder: (context, constraints) {
-            final itemWidth = (constraints.maxWidth / 2.5).clamp(120.0, 180.0); // Example: show 2.5 items, clamped
+            final itemWidth = (constraints.maxWidth / 2.5).clamp(120.0, 180.0);
             return ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: _bestSellingBooks.length,
@@ -132,11 +151,11 @@ class _HomePageState extends State<HomePage> {
                   child: SizedBox(
                     width: itemWidth,
                     child: _BookItem(
-                      imageUrl: book.imageUrl,
-                      title: book.title,
-                      author: book.author,
-                      authorImageUrl: book.authorImageUrl ?? 'assets/cover/cover_app.jpg',
-                      price: book.price ?? 'N/A',
+                      imageUrl: book['imageUrl']!,
+                      title: book['title']!,
+                      author: book['author']!,
+                      authorImageUrl: book['authorImageUrl'] ?? 'https://placehold.co/50x50/E0E0E0/000000?text=Author', // Gunakan placeholder
+                      price: book['price'] ?? 'N/A',
                       textColor: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
                       secondaryTextColor: Theme.of(context).textTheme.bodySmall?.color ?? Colors.grey,
                       onTap: () {
@@ -144,9 +163,9 @@ class _HomePageState extends State<HomePage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => BookDetailPage(
-                              bookTitle: book.title,
-                              authorName: book.author,
-                              imageUrl: book.imageUrl,
+                              bookTitle: book['title']!,
+                              authorName: book['author']!,
+                              imageUrl: book['imageUrl']!,
                             ),
                           ),
                         );
@@ -156,8 +175,8 @@ class _HomePageState extends State<HomePage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => AuthorDetailPage(
-                              authorName: book.author,
-                              imageUrl: book.authorImageUrl ?? 'assets/cover/cover_app.jpg',
+                              authorName: book['author']!,
+                              imageUrl: book['authorImageUrl'] ?? 'https://placehold.co/50x50/E0E0E0/000000?text=Author',
                             ),
                           ),
                         );
@@ -183,17 +202,17 @@ class _HomePageState extends State<HomePage> {
           return Padding(
             padding: const EdgeInsets.only(right: 15),
             child: _MostPopularItem(
-              imageUrl: popularBook.imageUrl,
-              title: popularBook.title,
+              imageUrl: popularBook['imageUrl']!,
+              title: popularBook['title']!,
               textColor: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => BookDetailPage(
-                      bookTitle: popularBook.title,
-                      authorName: 'Various Authors',
-                      imageUrl: popularBook.imageUrl,
+                      bookTitle: popularBook['title']!,
+                      authorName: popularBook['author'] ?? 'Various Authors', // Pastikan ada author di Map
+                      imageUrl: popularBook['imageUrl']!,
                     ),
                   ),
                 );
@@ -206,6 +225,7 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+// Ubah _BookItem dan _MostPopularItem untuk menerima Map<String, String>
 class _BookItem extends StatelessWidget {
   final String imageUrl;
   final String title;

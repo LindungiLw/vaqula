@@ -14,18 +14,26 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
-  flutter_rating_bar: ^4.0.1
   provider: ^6.0.5
-  firebase_core: ^4.0.0 # Update this line
-  firebase_auth: ^6.0.0 # Update this line
+  firebase_core: ^4.0.0
+  firebase_auth: ^6.0.0
   google_sign_in: ^6.1.0
-  flutter_screenutil: ^5.9.3
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^5.0.0
+  flutter_screenutil: ^5.9.3
+  flutter_rating_bar: ^4.0.1
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+    android: "launcher_icon"
+    ios: true
+    image_path: "assets/cover/cover_app.jpg"
+    min_sdk_android: 21
 
 flutter:
 
@@ -33,5 +41,7 @@ flutter:
   assets:
     - assets/cover/
     - assets/books/
+    - assets/books/best_selling/
+    - assets/books/popular_books/
     - assets/popular/
     - assets/profile/
