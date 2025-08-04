@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../home/book_data.dart';
+import '../home/view_all_books_page.dart';
 import 'add_book_page.dart';
-import 'book_data.dart';
 import 'book_data/book_data.dart';
 import 'book_data/fantasy_books.dart';
 import 'book_data/fiction_books.dart';
@@ -10,7 +11,6 @@ import 'book_data/sci_fi_books.dart';
 import 'book_data/thriller_books.dart';
 import 'book_detail_page.dart';
 
-
 class CategoryPage extends StatefulWidget {
   const CategoryPage({Key? key}) : super(key: key);
 
@@ -19,30 +19,26 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  // Daftar kategori, sekarang diambil dari file terpisah
   final List<String> _categories = categoriesList;
 
-  // Data buku utama, akan digabungkan dari semua file kategori
   List<Map<String, String>> _allBookList = [];
 
-  // List yang akan ditampilkan setelah difilter oleh kategori atau pencarian
   List<Map<String, String>> _filteredBooksForDisplay = [];
 
   final TextEditingController _searchController = TextEditingController();
   String _currentSearchQuery = '';
-  int _selectedCategoryIndex = 0; // Indeks kategori yang dipilih, default ke 'All' (indeks 0)
+  int _selectedCategoryIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _loadAllBooks(); // Panggil metode untuk memuat dan menggabungkan semua buku
+    _loadAllBooks();
     _searchController.addListener(_onSearchChanged);
-    _filterBooks(); // Inisialisasi daftar buku saat pertama kali dimuat
+    _filterBooks();
   }
 
-  // Metode untuk memuat dan menggabungkan semua buku dari file-file terpisah
   void _loadAllBooks() {
-    _allBookList = []; // Pastikan list kosong sebelum diisi
+    _allBookList = [];
     _allBookList.addAll(newBooksData);
     _allBookList.addAll(fantasyBooksData);
     _allBookList.addAll(fictionBooksData);
@@ -50,36 +46,31 @@ class _CategoryPageState extends State<CategoryPage> {
     _allBookList.addAll(romanceBooksData);
     _allBookList.addAll(sciFiBooksData);
     _allBookList.addAll(thrillerBooksData);
-    // Anda bisa menambahkan logika untuk menghapus duplikasi jika diperlukan
-    // Misalnya: _allBookList = _allBookList.toSet().toList(); jika buku memiliki ID unik
   }
 
-  // Metode untuk memperbarui kueri pencarian dan memfilter buku
   void _onSearchChanged() {
     setState(() {
       _currentSearchQuery = _searchController.text;
-      _filterBooks(); // Panggil filter setiap kali kueri berubah
+      _filterBooks();
     });
   }
 
-  // Metode untuk memfilter daftar buku berdasarkan kategori dan/atau kueri pencarian
   void _filterBooks() {
-    List<Map<String, String>> tempBooks = List.from(_allBookList); // Mulai dengan semua buku
+    List<Map<String, String>> tempBooks = List.from(_allBookList);
 
-    // 1. Filter berdasarkan kategori yang dipilih (jika bukan 'All')
-    if (_selectedCategoryIndex > 0) { // Jika bukan 'All' (indeks 0)
+    if (_selectedCategoryIndex > 0) {
       final selectedCategoryName = _categories[_selectedCategoryIndex];
       tempBooks = tempBooks.where((book) =>
       book['category']!.toLowerCase() == selectedCategoryName.toLowerCase()).toList();
     }
 
-    // 2. Filter berdasarkan kueri pencarian (selalu berlaku jika ada)
+
     if (_currentSearchQuery.isNotEmpty) {
       final query = _currentSearchQuery.toLowerCase();
       tempBooks = tempBooks.where((book) =>
       book['title']!.toLowerCase().contains(query) ||
           book['author']!.toLowerCase().contains(query) ||
-          book['category']!.toLowerCase().contains(query) // Mencari juga di kategori
+          book['category']!.toLowerCase().contains(query)
       ).toList();
     }
 
@@ -88,18 +79,10 @@ class _CategoryPageState extends State<CategoryPage> {
     });
   }
 
-  // Callback yang akan dipanggil dari AddBookPage ketika buku baru ditambahkan
   void _onNewBookAdded(Map<String, String> newBook) {
     setState(() {
-      _allBookList.add(newBook); // Tambahkan buku baru ke daftar utama di CategoryPage
-      // Anda perlu menambahkan buku ini ke list data spesifik di file book_data.dart
-      // agar persisten di seluruh sesi aplikasi (jika Anda tidak menggunakan database).
-      // Misalnya:
-      // if (newBook['category'] == 'New') newBooksData.add(newBook);
-      // else if (newBook['category'] == 'Fantasy') fantasyBooksData.add(newBook);
-      // ...dan seterusnya untuk setiap kategori
-      // Atau, yang lebih baik, gunakan database seperti Firestore untuk persistensi.
-      _filterBooks(); // Panggil filter ulang untuk memperbarui tampilan
+      _allBookList.add(newBook);
+      _filterBooks();
     });
   }
 
@@ -121,13 +104,13 @@ class _CategoryPageState extends State<CategoryPage> {
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Theme.of(context).textTheme.bodyLarge?.color,
-              fontWeight: FontWeight.bold // Pastikan bold
+              fontWeight: FontWeight.bold
           ),
         ),
-        centerTitle: true, // Judul AppBar di tengah
+        centerTitle: true,
         elevation: 0,
       ),
-      body: Column( // Menggunakan Column agar bisa menggabungkan berbagai widget
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
@@ -135,15 +118,15 @@ class _CategoryPageState extends State<CategoryPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Kolom Input Pencarian
+
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText: 'Search Here',
                     hintStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.6)),
-                    border: OutlineInputBorder( // Menggunakan OutlineInputBorder untuk tampilan yang lebih jelas
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none, // Hapus border default
+                      borderSide: BorderSide.none,
                     ),
                     filled: true,
                     fillColor: Theme.of(context).cardColor, // Menggunakan warna card untuk background
@@ -223,7 +206,7 @@ class _CategoryPageState extends State<CategoryPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildSectionHeader(context, 'New Book List'),
+                        _buildSectionHeader(context, 'New Book List', _allBookList.where((book) => book['category'] == 'New' || book['category'] == 'Thriller' || book['category'] == 'Fiction' || book['category'] == 'Fantasy').toList()),
                         const SizedBox(height: 15),
                         // Filter hardcoded untuk New Book List saat 'All' dipilih
                         _buildHorizontalBookList(
@@ -233,7 +216,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
                         const SizedBox(height: 20),
 
-                        _buildSectionHeader(context, 'Most Popular'),
+                        _buildSectionHeader(context, 'Most Popular', _allBookList.where((book) => book['category'] == 'Romance' || book['category'] == 'Horror' || book['category'] == 'Sci-Fi').toList()),
                         const SizedBox(height: 15),
                         // Filter hardcoded untuk Most Popular saat 'All' dipilih
                         _buildHorizontalBookList(
@@ -283,7 +266,8 @@ class _CategoryPageState extends State<CategoryPage> {
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, String title) {
+  // _buildSectionHeader sekarang menerima daftar buku untuk tombol "More"
+  Widget _buildSectionHeader(BuildContext context, String title, List<Map<String, String>> allBooksInSection) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -297,8 +281,16 @@ class _CategoryPageState extends State<CategoryPage> {
         ),
         TextButton(
           onPressed: () {
-            print('More $title tapped!');
-            // TODO: Tambahkan navigasi ke halaman "More" jika ada
+            // Navigasi ke ViewAllBooksPage saat tombol "More >" ditekan
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ViewAllBooksPage(
+                  title: title, // Gunakan judul bagian sebagai judul halaman baru
+                  books: allBooksInSection, // Teruskan daftar buku lengkap untuk bagian ini
+                ),
+              ),
+            );
           },
           child: Row(
             children: [

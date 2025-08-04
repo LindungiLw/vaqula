@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'book_data.dart'; // Import file data buku yang baru
+import 'book_data.dart';
 
 class AddBookPage extends StatefulWidget {
   // Callback untuk meneruskan data buku yang baru ditambahkan
