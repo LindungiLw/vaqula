@@ -42,6 +42,7 @@ flutter:
     - assets/cover/
     - assets/books/
     - assets/books/best_selling/
+    - assets/books/best_selling/author/
     - assets/books/popular_books/
     - assets/popular/
     - assets/profile/

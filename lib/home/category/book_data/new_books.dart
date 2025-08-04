@@ -12,5 +12,4 @@ final List<Map<String, String>> newBooksData = [
     'author': 'Second Author',
     'category': 'New',
   },
-  // Tambahkan lebih banyak buku 'New' di sini
 ];

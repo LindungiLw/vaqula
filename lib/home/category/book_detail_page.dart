@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voqula/home/category/reviews_tab.dart';
-import '../search/read_book_page.dart';
+import '../books_details/read_book_page.dart';
 import 'about_book_tab.dart';
 import 'chapters_tab.dart';
 
@@ -8,12 +8,14 @@ class BookDetailPage extends StatefulWidget {
   final String bookTitle;
   final String authorName;
   final String imageUrl;
+  final String? authorImageUrl; // Tambahkan properti untuk URL gambar penulis
 
   const BookDetailPage({
     Key? key,
     required this.bookTitle,
     required this.authorName,
     required this.imageUrl,
+    this.authorImageUrl, // Jadikan opsional
   }) : super(key: key);
 
   @override
@@ -37,6 +39,13 @@ class _BookDetailPageState extends State<BookDetailPage> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
+    // Tentukan URL gambar penulis yang akan digunakan
+    // Jika widget.authorImageUrl tidak null dan tidak kosong, gunakan itu.
+    // Jika tidak, gunakan URL placeholder.
+    final String actualAuthorImageUrl = widget.authorImageUrl != null && widget.authorImageUrl!.isNotEmpty
+        ? widget.authorImageUrl!
+        : 'assets/authors/author_placeholder.jpg'; // Path aset placeholder default
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
@@ -66,7 +75,7 @@ class _BookDetailPageState extends State<BookDetailPage> with SingleTickerProvid
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child: Image.asset(
+                    child: Image.asset( // Tetap gunakan Image.asset untuk gambar buku
                       widget.imageUrl,
                       height: 180,
                       width: 120,
@@ -102,7 +111,13 @@ class _BookDetailPageState extends State<BookDetailPage> with SingleTickerProvid
                           children: [
                             CircleAvatar(
                               radius: 15,
-                              backgroundImage: NetworkImage('https://via.placeholder.com/150'), // Ganti dengan gambar author
+                              // Menggunakan AssetImage untuk gambar penulis dari aset
+                              // Menambahkan errorBuilder untuk fallback
+                              backgroundImage: AssetImage(actualAuthorImageUrl),
+                              onBackgroundImageError: (exception, stackTrace) {
+                                print('Error loading author image: $exception');
+                              },
+                              child: actualAuthorImageUrl.startsWith('assets') ? null : const Icon(Icons.person, color: Colors.white), // Fallback icon jika placeholder network
                             ),
                             const SizedBox(width: 8),
                             Text(

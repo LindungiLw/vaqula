@@ -2,9 +2,9 @@
 
 final List<Map<String, String>> fantasyBooksData = [
   {
-    'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg',
+    'imageUrl': 'assets/books/best_selling/the_midnights.jpeg',
     'title': 'The Midnights',
-    'author': 'Author Name',
+    'author': 'Taylor Swift',
     'category': 'Fantasy',
   },
   {

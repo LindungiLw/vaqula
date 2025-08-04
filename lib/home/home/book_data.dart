@@ -9,7 +9,7 @@ final List<Map<String, String>> bestSellingBooks = [
     'author': 'Alex Michaelides',
     'category': 'Thriller',
     'price': 'Rp 175.000',
-    'authorImageUrl': 'assets/books/best_selling/the_silent_patient.jpg',
+    'authorImageUrl': 'assets/books/best_selling/author/alex_michaelides.jpeg',
   },
   {
     'imageUrl': 'assets/books/best_selling/we_were_liars.jpg',
@@ -17,31 +17,31 @@ final List<Map<String, String>> bestSellingBooks = [
     'author': 'E. Lockhart',
     'category': 'Fiction',
     'price': 'Rp 150.000',
-    'authorImageUrl': 'https://placehold.co/50x50/E0E0E0/000000?text=AuthorB', // Placeholder
+    'authorImageUrl': 'assets/books/best_selling/author/e_lockhart.jpeg',
   },
   {
-    'imageUrl': 'assets/books/best_selling/the_midnights.jpg',
+    'imageUrl': 'assets/books/best_selling/the_midnights.jpeg',
     'title': 'The Midnights',
-    'author': 'Author Name',
+    'author': 'Taylor Swift',
     'category': 'Fantasy',
     'price': 'Rp 230.000',
-    'authorImageUrl': 'https://placehold.co/50x50/E0E0E0/000000?text=AuthorC', // Placeholder
+    'authorImageUrl': 'assets/books/best_selling/author/taylor_swift.jpeg',
   },
   {
     'imageUrl': 'assets/books/best_selling/you_be_home.jpg',
     'title': 'You Be Home',
-    'author': 'Author Name',
+    'author': 'Kathleen Glasgow',
     'category': 'Romance',
     'price': 'Rp 120.000',
-    'authorImageUrl': 'https://placehold.co/50x50/E0E0E0/000000?text=AuthorD', // Placeholder
+    'authorImageUrl': 'assets/books/best_selling/author/kathleen_glasgow.jpeg',
   },
   {
     'imageUrl': 'assets/books/best_selling/wilder_girls.jpg',
     'title': 'Wilder Girls',
-    'author': 'Author Name',
+    'author': 'Rory Power',
     'category': 'Horror',
     'price': 'Rp 180.000',
-    'authorImageUrl': 'https://placehold.co/50x50/E0E0E0/000000?text=AuthorE',
+    'authorImageUrl': 'assets/books/best_selling/author/rory_power.jpg',
   },
 ];
 
