@@ -139,7 +139,7 @@ class _AddBookPageState extends State<AddBookPage> {
               ElevatedButton(
                 onPressed: _addBook,
                 style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50), // Lebar penuh
+                  minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

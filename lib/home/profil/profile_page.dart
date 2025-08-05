@@ -33,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
     print('Gender: $_selectedGender');
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Profil berhasil diperbarui!')),
+      SnackBar(content: Text('Profile updated successfully!')),
     );
   }
 
@@ -78,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   right: 0,
                   child: GestureDetector(
                     onTap: () {
-                      print('Edit profile picture tapped!');
+                      print('Change profile picture!');
                     },
                     child: Container(
                       padding: const EdgeInsets.all(4),

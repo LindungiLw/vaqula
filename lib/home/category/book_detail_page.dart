@@ -8,14 +8,14 @@ class BookDetailPage extends StatefulWidget {
   final String bookTitle;
   final String authorName;
   final String imageUrl;
-  final String? authorImageUrl; // Tambahkan properti untuk URL gambar penulis
+  final String? authorImageUrl;
 
   const BookDetailPage({
     Key? key,
     required this.bookTitle,
     required this.authorName,
     required this.imageUrl,
-    this.authorImageUrl, // Jadikan opsional
+    this.authorImageUrl,
   }) : super(key: key);
 
   @override
@@ -39,12 +39,9 @@ class _BookDetailPageState extends State<BookDetailPage> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    // Tentukan URL gambar penulis yang akan digunakan
-    // Jika widget.authorImageUrl tidak null dan tidak kosong, gunakan itu.
-    // Jika tidak, gunakan URL placeholder.
     final String actualAuthorImageUrl = widget.authorImageUrl != null && widget.authorImageUrl!.isNotEmpty
         ? widget.authorImageUrl!
-        : 'assets/authors/author_placeholder.jpg'; // Path aset placeholder default
+        : 'assets/authors/author_placeholder.jpg';
 
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +57,31 @@ class _BookDetailPageState extends State<BookDetailPage> with SingleTickerProvid
           IconButton(
             icon: Icon(Icons.favorite_border, color: Theme.of(context).iconTheme.color),
             onPressed: () {
-              // Handle favorite
+              if (widget.authorImageUrl != null && widget.authorImageUrl!.isNotEmpty) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Favorite Author'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(widget.authorImageUrl!, width: 100, height: 100, fit: BoxFit.cover),
+                          Text(widget.authorName),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          child: Text('OK'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
             },
           ),
         ],
@@ -75,7 +96,7 @@ class _BookDetailPageState extends State<BookDetailPage> with SingleTickerProvid
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.0),
-                    child: Image.asset( // Tetap gunakan Image.asset untuk gambar buku
+                    child: Image.asset(
                       widget.imageUrl,
                       height: 180,
                       width: 120,
@@ -111,13 +132,11 @@ class _BookDetailPageState extends State<BookDetailPage> with SingleTickerProvid
                           children: [
                             CircleAvatar(
                               radius: 15,
-                              // Menggunakan AssetImage untuk gambar penulis dari aset
-                              // Menambahkan errorBuilder untuk fallback
                               backgroundImage: AssetImage(actualAuthorImageUrl),
                               onBackgroundImageError: (exception, stackTrace) {
                                 print('Error loading author image: $exception');
                               },
-                              child: actualAuthorImageUrl.startsWith('assets') ? null : const Icon(Icons.person, color: Colors.white), // Fallback icon jika placeholder network
+                              child: actualAuthorImageUrl.startsWith('assets') ? null : const Icon(Icons.person, color: Colors.white),
                             ),
                             const SizedBox(width: 8),
                             Text(

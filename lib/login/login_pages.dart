@@ -132,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Center(
                         child: Text(
-                          'Selamat Datang Kembali!',
+                          'Welcome Back!',
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -163,10 +163,10 @@ class _LoginPageState extends State<LoginPage> {
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: _isLoading ? null : () {
-                            _showSnackBar('Fitur Lupa Password belum diimplementasikan.');
+                            _showSnackBar('Password not found.');
                           },
                           child: Text(
-                            'Lupa Password?',
+                            'Forgot Password?',
                             style: GoogleFonts.inter(color: Colors.grey[700]),
                           ),
                         ),
@@ -201,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                           const Expanded(child: Divider(color: Colors.black38)),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Text('Atau Login Dengan', style: GoogleFonts.inter(color: Colors.black87)),
+                            child: Text('or login with', style: GoogleFonts.inter(color: Colors.black87)),
                           ),
                           const Expanded(child: Divider(color: Colors.black38)),
                         ],
@@ -225,11 +225,11 @@ class _LoginPageState extends State<LoginPage> {
                       Center(
                         child: RichText(
                           text: TextSpan(
-                            text: "Belum punya akun? ",
+                            text: "don't have an account? ",
                             style: GoogleFonts.inter(color: Colors.black),
                             children: [
                               TextSpan(
-                                text: 'Daftar',
+                                text: 'Register',
                                 style: GoogleFonts.inter(
                                   color: mainColor,
                                   fontWeight: FontWeight.bold,

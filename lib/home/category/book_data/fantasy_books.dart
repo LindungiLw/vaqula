@@ -1,5 +1,3 @@
-// lib/data/categories/fantasy_books.dart
-
 final List<Map<String, String>> fantasyBooksData = [
   {
     'imageUrl': 'assets/books/best_selling/the_midnights.jpeg',
@@ -13,5 +11,4 @@ final List<Map<String, String>> fantasyBooksData = [
     'author': 'Jane Doe',
     'category': 'Fantasy',
   },
-  // Tambahkan lebih banyak buku 'Fantasy' di sini
 ];

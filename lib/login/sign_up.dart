@@ -50,7 +50,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Future<void> _signUpWithEmailPassword() async {
     if (_passwordController.text != _confirmPasswordController.text) {
-      _showSnackBar('Password dan Konfirmasi Password tidak cocok.');
+      _showSnackBar('Passwords do not match.');
       return;
     }
 
@@ -148,7 +148,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     children: [
                       Center(
                         child: Text(
-                          'Buat Akun Baru',
+                          'Make an Account',
                           style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -160,7 +160,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                       _buildTextField(
                         controller: _nameController,
-                        labelText: 'Nama Lengkap',
+                        labelText: 'Name',
                         icon: Icons.person_outline,
                         context: context,
                       ),
@@ -186,7 +186,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                       _buildPasswordTextField(
                         controller: _confirmPasswordController,
-                        labelText: 'Konfirmasi Password',
+                        labelText: 'Confirm Password',
                         obscureText: _obscureConfirmPassword,
                         onToggleVisibility: _toggleConfirmPasswordVisibility,
                         context: context,
@@ -223,7 +223,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: Text(
-                              'Atau daftar dengan',
+                              'or register with',
                               style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
                             ),
                           ),
@@ -249,11 +249,11 @@ class _SignupScreenState extends State<SignupScreen> {
                       Center(
                         child: RichText(
                           text: TextSpan(
-                            text: "Sudah punya akun? ",
+                            text: "If you already have an account? ",
                             style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
                             children: [
                               TextSpan(
-                                text: 'Masuk',
+                                text: 'Login',
                                 style: TextStyle(
                                   color: mainColor,
                                   fontWeight: FontWeight.bold,

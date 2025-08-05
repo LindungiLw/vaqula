@@ -67,17 +67,17 @@ class AboutBookTab extends StatelessWidget {
   Widget _buildYouMayLikeList(BuildContext context) {
     final List<Map<String, String>> youMayLikeBooks = [
       {
-        'imageUrl': 'assets/books/the_loneliest.jpg',
+        'imageUrl': 'assets/books/popular_books/the_loneliest.jpg',
         'title': 'The Loneliest Girl in the Universe',
         'price': '75.000',
       },
       {
-        'imageUrl': 'assets/books/the_kingdom.jpg',
+        'imageUrl': 'assets/books/popular_books/the_kingdom.jpg',
         'title': 'The Bridge Kingdom',
         'price': '120.000',
       },
       {
-        'imageUrl': 'assets/books/flutter_books.jpg',
+        'imageUrl': 'assets/books/popular_books/flutter_books.jpg',
         'title': 'The Story of Four Sisters and an Incredible Journey',
         'price': '300.000',
       },
