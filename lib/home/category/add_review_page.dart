@@ -21,13 +21,13 @@ class _AddReviewPageState extends State<AddReviewPage> {
   }
 
   void _submitReview() {
-    print('Mengirim review untuk: ${widget.bookTitle}');
+    print('Sending review for book: ${widget.bookTitle}');
     print('Rating: $_currentRating');
     print('Review: ${_reviewController.text}');
 
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Review Anda berhasil ditambahkan!')),
+      SnackBar(content: Text('Review is added successfully!')),
     );
   }
 

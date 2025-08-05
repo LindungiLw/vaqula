@@ -1,5 +1,3 @@
-// lib/data/categories/sci_fi_books.dart
-
 final List<Map<String, String>> sciFiBooksData = [
   {
     'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg',

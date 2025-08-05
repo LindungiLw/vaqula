@@ -151,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                       imageUrl: book['imageUrl']!,
                       title: book['title']!,
                       author: book['author']!,
-                      authorImageUrl: book['authorImageUrl'] ?? 'assets/authors/author_placeholder.jpg', // Default asset
+                      authorImageUrl: book['authorImageUrl'] ?? 'assets/authors/author_placeholder.jpg',
                       price: book['price'] ?? 'N/A',
                       textColor: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black,
                       secondaryTextColor: Theme.of(context).textTheme.bodySmall?.color ?? Colors.grey,
@@ -163,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                               bookTitle: book['title']!,
                               authorName: book['author']!,
                               imageUrl: book['imageUrl']!,
-                              authorImageUrl: book['authorImageUrl'], // Teruskan authorImageUrl
+                              authorImageUrl: book['authorImageUrl'],
                             ),
                           ),
                         );
@@ -174,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                           MaterialPageRoute(
                             builder: (context) => AuthorDetailPage(
                               authorName: book['author']!,
-                              imageUrl: book['authorImageUrl'] ?? 'assets/authors/author_placeholder.jpg', // Default asset
+                              imageUrl: book['authorImageUrl'] ?? 'assets/authors/author_placeholder.jpg',
                             ),
                           ),
                         );
@@ -211,7 +211,7 @@ class _HomePageState extends State<HomePage> {
                       bookTitle: popularBook['title']!,
                       authorName: popularBook['author'] ?? 'Various Authors',
                       imageUrl: popularBook['imageUrl']!,
-                      authorImageUrl: popularBook['authorImageUrl'], // Teruskan authorImageUrl
+                      authorImageUrl: popularBook['authorImageUrl'],
                     ),
                   ),
                 );
@@ -258,7 +258,7 @@ class _BookItem extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset( // Menggunakan Image.asset
+              child: Image.asset(
                 imageUrl,
                 height: 180,
                 width: 150,
@@ -335,7 +335,7 @@ class _MostPopularItem extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.asset( // Menggunakan Image.asset
+              child: Image.asset(
                 imageUrl,
                 height: 150,
                 width: 150,

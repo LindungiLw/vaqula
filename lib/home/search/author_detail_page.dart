@@ -68,7 +68,7 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
             ),
             const SizedBox(height: 10),
             RatingBarIndicator(
-              rating: 4.5, // Dummy rating
+              rating: 4.5,
               itemBuilder: (context, index) => Icon(
                 Icons.star,
                 color: Colors.amber,

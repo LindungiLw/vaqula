@@ -3,7 +3,7 @@ import 'package:voqula/home/search/notification_page.dart';
 import 'package:voqula/home/profil/profile_page.dart';
 import 'package:voqula/home/category/category_page.dart';
 import 'package:voqula/home/home/home.dart';
-import 'package:voqula/home/search/search_page.dart'; // Import SearchPage untuk navigasi
+import 'package:voqula/home/search/search_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -15,11 +15,10 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  // Daftar widget yang diperbarui untuk BottomNavigationBar (hanya 3 tab)
   static final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     CategoryPage(),
-    ProfilePage(), // ProfilePage sekarang di indeks 2
+    ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -31,7 +30,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     PreferredSizeWidget? currentAppBar;
-    if (_selectedIndex == 0) { // AppBar untuk HomePage
+    if (_selectedIndex == 0) {
       currentAppBar = PreferredSize(
         preferredSize: const Size.fromHeight(120.0),
         child: AppBar(
@@ -72,14 +71,11 @@ class _MainScreenState extends State<MainScreen> {
                               );
                             },
                           ),
-                          // Tidak perlu ikon pencarian terpisah di sini,
-                          // karena TextField di bawah akan menangani navigasi ke SearchPage
                         ],
                       ),
                     ],
                   ),
 
-                  // GestureDetector agar TextField dapat diketuk untuk membuka SearchPage
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -87,7 +83,7 @@ class _MainScreenState extends State<MainScreen> {
                         MaterialPageRoute(builder: (context) => const SearchPage()),
                       );
                     },
-                    child: AbsorbPointer( // Mencegah TextField langsung diedit di sini
+                    child: AbsorbPointer(
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         decoration: BoxDecoration(
