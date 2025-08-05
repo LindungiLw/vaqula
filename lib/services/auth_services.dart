@@ -9,8 +9,6 @@ class AuthService {
 
   AuthService(this._showSnackBarCallback);
 
-  /// Handles user registration with email and password.
-  /// Displays appropriate snackbar messages for success or failure.
   Future<User?> signUpWithEmailPassword({
     required String email,
     required String password,
@@ -22,40 +20,36 @@ class AuthService {
         password: password.trim(),
       );
 
-      // Update display name for the newly created user
       await userCredential.user?.updateDisplayName(displayName.trim());
-      // Reload user to get the updated display name
       await userCredential.user?.reload();
       final User? updatedUser = _auth.currentUser;
 
       if (updatedUser != null) {
         print('Signed Up: ${updatedUser.displayName} (${updatedUser.email})');
-        _showSnackBarCallback('Pendaftaran berhasil! Selamat datang, ${updatedUser.displayName ?? updatedUser.email}!');
+        _showSnackBarCallback('Registration successful! Welcome!, ${updatedUser.displayName ?? updatedUser.email}!');
         return updatedUser;
       }
       return null;
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       if (e.code == 'weak-password') {
-        errorMessage = 'Password terlalu lemah.';
+        errorMessage = 'Password is too weak.';
       } else if (e.code == 'email-already-in-use') {
-        errorMessage = 'Email sudah terdaftar.';
-      } else if (e.code == 'invalid-email') {
-        errorMessage = 'Email tidak valid.';
+        errorMessage = 'Email is already registered.';
+      } else if (e.code == 'invalid-eml') {
+        errorMessage = 'Email is not valid.';
       } else {
-        errorMessage = 'Terjadi kesalahan saat pendaftaran: ${e.message}';
+        errorMessage = 'An error occurred during registration.: ${e.message}';
       }
       _showSnackBarCallback(errorMessage);
       return null;
     } catch (e) {
       print('Error signing up: $e');
-      _showSnackBarCallback('Terjadi kesalahan tidak terduga.');
+      _showSnackBarCallback('An unexpected error occurred.');
       return null;
     }
   }
 
-  /// Handles user sign-in with email and password.
-  /// Displays appropriate snackbar messages for success or failure.
   Future<User?> signInWithEmailPassword({
     required String email,
     required String password,
@@ -70,41 +64,39 @@ class AuthService {
 
       if (user != null) {
         print('Signed In: ${user.displayName} (${user.email})');
-        _showSnackBarCallback('Berhasil login sebagai ${user.displayName ?? user.email}!');
+        _showSnackBarCallback('Successful login as ${user.displayName ?? user.email}!');
         return user;
       }
       return null;
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       if (e.code == 'user-not-found') {
-        errorMessage = 'Tidak ada pengguna dengan email tersebut.';
+        errorMessage = 'There are no users with that email address..';
       } else if (e.code == 'wrong-password') {
-        errorMessage = 'Password salah.';
+        errorMessage = 'Password is incorrect.';
       } else if (e.code == 'invalid-email') {
-        errorMessage = 'Email tidak valid.';
+        errorMessage = 'Email is not valid.';
       } else if (e.code == 'user-disabled') {
-        errorMessage = 'Akun pengguna ini telah dinonaktifkan.';
+        errorMessage = 'The user account has been disabled.';
       }
       else {
-        errorMessage = 'Terjadi kesalahan saat login: ${e.message}';
+        errorMessage = 'An error occurred during login: ${e.message}';
       }
       _showSnackBarCallback(errorMessage);
       return null;
     } catch (e) {
       print('Error signing in: $e');
-      _showSnackBarCallback('Terjadi kesalahan tidak terduga.');
+      _showSnackBarCallback('An unexpected error occurred.');
       return null;
     }
   }
 
-  /// Handles user sign-in with Google.
-  /// Displays appropriate snackbar messages for success or failure.
   Future<User?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
-        _showSnackBarCallback('Login Google dibatalkan.');
+        _showSnackBarCallback('login with Google failed.');
         return null;
       }
 
@@ -120,35 +112,33 @@ class AuthService {
 
       if (user != null) {
         print('Signed in with Google: ${user.displayName}');
-        _showSnackBarCallback('Berhasil login dengan Google sebagai ${user.displayName ?? user.email}!');
+        _showSnackBarCallback('Login with Google successful!, ${user.displayName ?? user.email}!');
         return user;
       } else {
-        _showSnackBarCallback('Gagal mendapatkan informasi pengguna dari Google.');
+        _showSnackBarCallback('fail to get information with Google.');
         return null;
       }
     } on FirebaseAuthException catch (e) {
       print('Firebase Auth Error Google: ${e.code} - ${e.message}');
-      _showSnackBarCallback('Gagal login dengan Google: ${e.message}');
+      _showSnackBarCallback('fail to login with Google: ${e.message}');
       return null;
     } catch (e) {
       print('Error signing in with Google: $e');
-      _showSnackBarCallback('Terjadi kesalahan tidak terduga saat login Google.');
+      _showSnackBarCallback('An occurred error.');
       return null;
     }
   }
 
-  /// Handles user sign-out.
   Future<void> signOut() async {
     try {
       await _auth.signOut();
-      await _googleSignIn.signOut(); // Also sign out from Google if signed in via Google
-      _showSnackBarCallback('Berhasil keluar.');
+      await _googleSignIn.signOut();
+      _showSnackBarCallback('Successfully signed out.');
     } catch (e) {
       print('Error signing out: $e');
-      _showSnackBarCallback('Terjadi kesalahan saat keluar.');
+      _showSnackBarCallback('An unexpected error occurred when signing out.');
     }
   }
 
-  /// Provides a stream of the current user's authentication state.
   Stream<User?> get user => _auth.authStateChanges();
 }

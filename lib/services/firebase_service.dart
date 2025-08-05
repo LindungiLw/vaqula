@@ -10,9 +10,9 @@ class FirebaseService {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      print('Firebase berhasil.');
+      print('Firebase is successful.');
     } else {
-      print('Firebase sudah');
+      print('Firebase is done');
     }
   }
 }

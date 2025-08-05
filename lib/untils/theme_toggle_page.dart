@@ -22,7 +22,7 @@ class ThemeTogglePage extends StatelessWidget {
       ),
       body: Center(
         child: Text(
-          'Tekan ikon di atas untuk ganti mode terang/gelap',
+          'Press the icon above to switch between light and dark modes.',
           textAlign: TextAlign.center,
           style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
         ),
