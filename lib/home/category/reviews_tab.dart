@@ -80,7 +80,7 @@ class ReviewsTab extends StatelessWidget {
           const SizedBox(height: 15),
           _buildReviewItem(
             context,
-            imageUrl: 'https://via.placeholder.com/150',
+            imageUrl: 'assets/books/best_selling/author/date_thief.jpeg',
             userName: 'Date Thief',
             timeAgo: '11 Months Ago',
             rating: 4.0,
