@@ -1,12 +1,12 @@
 final List<Map<String, String>> sciFiBooksData = [
   {
-    'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg',
+    'imageUrl': 'assets/books/popular_books/this_were.jpeg',
     'title': 'This Were',
-    'author': 'Author Name',
+    'author': 'Keith',
     'category': 'Sci-Fi',
   },
   {
-    'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg',
+    'imageUrl': 'assets/books/popular_books/last_stand.jpeg',
     'title': 'The Last Stand',
     'author': 'John Smith',
     'category': 'Sci-Fi',
