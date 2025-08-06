@@ -135,7 +135,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          initialRoute: '/cover',
+          initialRoute: '/Cover',
           routes: appRoutes,
         );
       },
