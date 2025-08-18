@@ -16,7 +16,8 @@ class _AppCoverState extends State<AppCover> {
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => WelcomingApp(),
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                WelcomingApp(),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               return FadeTransition(
                 opacity: animation,
