@@ -124,6 +124,8 @@ class AuthService {
       return null;
     } catch (e) {
       print('Error sign in with Google: $e');
+
+      print('Error sign in with Google: $e');
       _showSnackBarCallback('An occurred error.');
       return null;
     }
