@@ -9,6 +9,7 @@ final List<Map<String, String>> newBooksData = [
     'imageUrl': 'assets/books/popular_books/fresh_start.jpg',
     'title': 'Fresh Start',
     'author': 'Joel Os teen',
+
     'category': 'New',
   },
 ];
