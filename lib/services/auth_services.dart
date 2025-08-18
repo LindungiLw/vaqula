@@ -34,9 +34,9 @@ class AuthService {
       String errorMessage;
       if (e.code == 'weak-password') {
         errorMessage = 'Password is too weak.';
-      } else if (e.code == 'email-already-in-use') {
+      } else if (e.code == 'email is already in use!') {
         errorMessage = 'Email is already registered.';
-      } else if (e.code == 'invalid-eml') {
+      } else if (e.code == 'invalid email') {
         errorMessage = 'Email is not valid.';
       } else {
         errorMessage = 'An error occurred during registration.: ${e.message}';
