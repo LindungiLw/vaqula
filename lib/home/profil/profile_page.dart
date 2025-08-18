@@ -46,12 +46,6 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).iconTheme.color),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
         title: Text(
           'Your Profile',
           style: TextStyle(

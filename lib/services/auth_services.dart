@@ -123,7 +123,8 @@ class AuthService {
       _showSnackBarCallback('fail to login with Google: ${e.message}');
       return null;
     } catch (e) {
-      print('Error signing in with Google: $e');
+      print('Error sign in with Google: $e');
+
       _showSnackBarCallback('An occurred error.');
       return null;
     }

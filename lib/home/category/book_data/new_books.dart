@@ -1,14 +1,15 @@
 final List<Map<String, String>> newBooksData = [
   {
-    'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg',
+    'imageUrl': 'assets/books/popular_books/a_new_beginning.jpg',
     'title': 'New Beginnings',
-    'author': 'First Author',
+    'author': 'Brenda Kennedy',
     'category': 'New',
   },
   {
-    'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/29/05/09/book-1867160_1280.jpg',
+    'imageUrl': 'assets/books/popular_books/fresh_start.jpg',
     'title': 'Fresh Start',
-    'author': 'Second Author',
+    'author': 'Joel Os teen',
+
     'category': 'New',
   },
 ];

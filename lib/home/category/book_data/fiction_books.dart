@@ -6,9 +6,9 @@ final List<Map<String, String>> fictionBooksData = [
     'category': 'Fiction',
   },
   {
-    'imageUrl': 'https://cdn.pixabay.com/photo/2016/11/19/00/30/book-1837012_1280.jpg',
-    'title': 'Fiction World',
-    'author': 'Another Author',
+    'imageUrl': 'assets/books/popular_books/rosie_goodwin.jpeg',
+    'title': 'Rosie Goodwin Moonlight',
+    'author': 'Rosie Goodwin',
     'category': 'Fiction',
   },
 ];
