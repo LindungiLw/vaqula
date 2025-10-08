@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../provider/user_provider.dart';
 import '../services/auth_services.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -36,58 +38,8 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscurePassword = !_obscurePassword;
-    });
-  }
-
-  void _toggleConfirmPasswordVisibility() {
-    setState(() {
-      _obscureConfirmPassword = !_obscureConfirmPassword;
-    });
-  }
-
-  Future<void> _signUpWithEmailPassword() async {
-    if (_passwordController.text != _confirmPasswordController.text) {
-      _showSnackBar('Passwords do not match.');
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    final user = await _authService.signUpWithEmailPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-      displayName: _nameController.text,
-    );
-
-    if (user != null) {
-      Navigator.pushReplacementNamed(context, '/login');
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  Future<void> _signInWithGoogle() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    final user = await _authService.signInWithGoogle();
-
-    if (user != null) {
-      Navigator.pushReplacementNamed(context, '/login');
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
+  void _togglePasswordVisibility() => setState(() => _obscurePassword = !_obscurePassword);
+  void _toggleConfirmPasswordVisibility() => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword);
 
   void _showSnackBar(String message) {
     if (mounted) {
@@ -97,10 +49,55 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
+  Future<void> _signUpWithEmailPassword() async {
+    if (_passwordController.text != _confirmPasswordController.text) {
+      _showSnackBar('Passwords do not match.');
+      return;
+    }
+    setState(() => _isLoading = true);
+
+    try {
+      final user = await _authService.signUpWithEmailPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+        displayName: _nameController.text,
+      );
+
+      if (user != null) {
+        await Provider.of<UserProvider>(context, listen: false).fetchUserData(user.uid);
+        Navigator.pushReplacementNamed(context, '/main_screen');
+      }
+    } catch (e) {
+      print("Error in signup UI: $e");
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    setState(() => _isLoading = true);
+
+    try {
+      final user = await _authService.signInWithGoogle();
+
+      if (user != null) {
+        await Provider.of<UserProvider>(context, listen: false).fetchUserData(user.uid);
+        Navigator.pushReplacementNamed(context, '/main_screen');
+      }
+    } catch (e) {
+      print("Error in Google sign in UI: $e");
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Color mainColor = const Color(0xFFA05E1A);
-
     return Scaffold(
       backgroundColor: mainColor,
       body: SafeArea(
@@ -129,8 +126,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
             ),
-
-
             Positioned.fill(
               top: 230 - 25,
               child: SingleChildScrollView(
@@ -157,7 +152,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                       const SizedBox(height: 30),
-
                       _buildTextField(
                         controller: _nameController,
                         labelText: 'Name',
@@ -165,7 +159,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         context: context,
                       ),
                       const SizedBox(height: 16),
-
                       _buildTextField(
                         controller: _emailController,
                         labelText: 'Email',
@@ -174,7 +167,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         context: context,
                       ),
                       const SizedBox(height: 16),
-
                       _buildPasswordTextField(
                         controller: _passwordController,
                         labelText: 'Password',
@@ -183,7 +175,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         context: context,
                       ),
                       const SizedBox(height: 16),
-
                       _buildPasswordTextField(
                         controller: _confirmPasswordController,
                         labelText: 'Confirm Password',
@@ -192,7 +183,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         context: context,
                       ),
                       const SizedBox(height: 24),
-
                       ElevatedButton(
                         onPressed: _isLoading ? null : _signUpWithEmailPassword,
                         style: ElevatedButton.styleFrom(
@@ -205,33 +195,22 @@ class _SignupScreenState extends State<SignupScreen> {
                             ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                         )
-                            : const Text(
-                          'Sign Up',
-                          style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
+                            : const Text('Sign Up', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
                       ),
-
                       const SizedBox(height: 20),
                       Row(
                         children: [
                           const Expanded(child: Divider(color: Colors.black38)),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Text(
-                              'or register with',
-                              style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
-                            ),
+                            child: Text('or register with', style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)),
                           ),
                           const Expanded(child: Divider(color: Colors.black38)),
                         ],
                       ),
                       const SizedBox(height: 20),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -243,9 +222,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                         ],
                       ),
-
                       const SizedBox(height: 25),
-
                       Center(
                         child: RichText(
                           text: TextSpan(
@@ -254,10 +231,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             children: [
                               TextSpan(
                                 text: 'Login',
-                                style: TextStyle(
-                                  color: mainColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: TextStyle(color: mainColor, fontWeight: FontWeight.bold),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     if (!_isLoading) {
@@ -317,10 +291,7 @@ class _SignupScreenState extends State<SignupScreen> {
         labelText: labelText,
         prefixIcon: Icon(Icons.lock_outline, color: Colors.grey.shade600),
         suffixIcon: IconButton(
-          icon: Icon(
-            obscureText ? Icons.visibility_off : Icons.visibility,
-            color: Colors.grey.shade600,
-          ),
+          icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.grey.shade600),
           onPressed: onToggleVisibility,
         ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),

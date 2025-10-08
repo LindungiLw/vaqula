@@ -1,34 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  /// Menyimpan data pengguna baru ke koleksi 'users'
-  Future<void> saveUserData({
-    required String uid,
-    required String displayName,
-    required String email,
-  }) async {
-    try {
-      await _db.collection('users').doc(uid).set({
-        'displayName': displayName,
-        'email': email,
-        'createdAt': FieldValue.serverTimestamp(), // Simpan waktu pembuatan
+  Future<void> createOrUpdateUser(User user) async {
+    final userRef = _db.collection('users').doc(user.uid);
+    final snapshot = await userRef.get();
+
+    if (!snapshot.exists) {
+      await userRef.set({
+        'displayName': user.displayName,
+        'email': user.email,
+        'photoURL': user.photoURL,
+        'createdAt': FieldValue.serverTimestamp(),
       });
-    } catch (e) {
-      print('Error saving user data: $e');
-      // Anda bisa melempar error kembali atau menanganinya di sini
-      rethrow;
     }
   }
 
-  /// Mengambil data pengguna dari Firestore berdasarkan UID
-  Future<DocumentSnapshot> getUserData(String uid) async {
-    try {
-      return await _db.collection('users').doc(uid).get();
-    } catch (e) {
-      print('Error getting user data: $e');
-      rethrow;
-    }
+  Future<DocumentSnapshot> getUserData(String uid) {
+    return _db.collection('users').doc(uid).get();
+  }
+
+  Future<void> updateUserData(String uid, Map<String, dynamic> data) {
+    return _db.collection('users').doc(uid).update(data);
   }
 }

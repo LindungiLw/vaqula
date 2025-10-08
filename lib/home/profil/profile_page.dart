@@ -1,5 +1,12 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import '../../provider/user_provider.dart';
+import '../../services/database_service.dart';
 import '../../untils/theme_provider.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -10,12 +17,28 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final TextEditingController _nameController = TextEditingController(text: 'Rahma Lindungi Laowo');
-  final TextEditingController _phoneController = TextEditingController(text: '082216375651');
-  final TextEditingController _emailController = TextEditingController(text: 'rahma23@jiu.ac');
-  String? _selectedGender;
+  // ===================================================================
+  // 1. DEKLARASI VARIABEL & CONTROLLER
+  // ===================================================================
+  final DatabaseService _databaseService = DatabaseService();
+  bool _isLoading = false;
 
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+  String? _selectedGender;
   final List<String> _genders = ['Male', 'Female', 'Other'];
+
+  // ===================================================================
+  // 2. LIFECYCLE & LOGIC METHODS
+  // ===================================================================
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
 
   @override
   void dispose() {
@@ -25,34 +48,93 @@ class _ProfilePageState extends State<ProfilePage> {
     super.dispose();
   }
 
-  void _updateProfile() {
-    print('Updating profile...');
-    print('Name: ${_nameController.text}');
-    print('Phone: ${_phoneController.text}');
-    print('Email: ${_emailController.text}');
-    print('Gender: $_selectedGender');
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Profile updated successfully!')),
-    );
+  void _loadUserData() {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    if (userProvider.userData != null) {
+      final userData = userProvider.userData!;
+      setState(() {
+        _nameController.text = userData['displayName'] ?? '';
+        _emailController.text = userData['email'] ?? '';
+        _phoneController.text = userData['phoneNumber'] ?? '';
+        String? genderFromDb = userData['gender'];
+        if (genderFromDb != null && _genders.contains(genderFromDb)) {
+          _selectedGender = genderFromDb;
+        }
+      });
+    }
   }
+
+  void _updateProfile() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    setState(() => _isLoading = true);
+    try {
+      final Map<String, dynamic> updatedData = {
+        'displayName': _nameController.text.trim(),
+        'phoneNumber': _phoneController.text.trim(),
+        'gender': _selectedGender,
+      };
+      await _databaseService.updateUserData(user.uid, updatedData);
+      await Provider.of<UserProvider>(context, listen: false).fetchUserData(user.uid);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile updated successfully!')));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to update profile: $e')));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  // PENAMBAHAN BARU: Fungsi lengkap untuk ganti foto profil
+  void _changeProfilePicture() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image == null) return;
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      final file = File(image.path);
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('profile_pictures')
+          .child('${user.uid}.jpg');
+
+      await ref.putFile(file);
+      final photoURL = await ref.getDownloadURL();
+      await _databaseService.updateUserData(user.uid, {'photoURL': photoURL});
+      await Provider.of<UserProvider>(context, listen: false).fetchUserData(user.uid);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Foto profil berhasil diperbarui!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Gagal mengupload foto: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+
+  // ===================================================================
+  // 3. UI BUILD METHOD
+  // ===================================================================
 
   @override
   Widget build(BuildContext context) {
-    final Color mainColor = Color(0xFFA05E1A);
+    final Color mainColor = const Color(0xFFA05E1A);
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
-        title: Text(
-          'Your Profile',
-          style: TextStyle(
-            color: Theme.of(context).appBarTheme.titleTextStyle?.color,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text('Your Profile', style: TextStyle(color: Theme.of(context).appBarTheme.titleTextStyle?.color, fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -62,18 +144,24 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             Stack(
               children: [
-                CircleAvatar(
-                  radius: 60,
-                  backgroundImage: AssetImage('assets/profile/lindungi_profile.jpg'),
-                  onBackgroundImageError: (exception, stackTrace) => const Icon(Icons.person, size: 60, color: Colors.grey),
+                Consumer<UserProvider>(
+                    builder: (context, userProvider, child) {
+                      final photoURL = userProvider.userData?['photoURL'];
+                      return CircleAvatar(
+                        radius: 60,
+                        backgroundImage: (photoURL != null && photoURL.isNotEmpty)
+                            ? NetworkImage(photoURL)
+                            : const AssetImage('assets/profile/lindungi_profile.jpg') as ImageProvider,
+                        onBackgroundImageError: (exception, stackTrace) => const Icon(Icons.person, size: 60, color: Colors.grey),
+                      );
+                    }
                 ),
                 Positioned(
                   bottom: 0,
                   right: 0,
                   child: GestureDetector(
-                    onTap: () {
-                      print('Change profile picture!');
-                    },
+                    // PENYESUAIAN: Hubungkan ke fungsi yang benar
+                    onTap: _changeProfilePicture,
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
@@ -88,81 +176,43 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
             const SizedBox(height: 20),
-            Text(
-              'Rahma Lindungi Laowo',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).textTheme.bodyLarge?.color,
-              ),
+            Consumer<UserProvider>(
+                builder: (context, userProvider, child) {
+                  final displayName = userProvider.userData?['displayName'] ?? 'Loading...';
+                  return Text(displayName, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold));
+                }
             ),
             const SizedBox(height: 30),
-
-            _buildProfileInputField(
-              context,
-              label: 'profile name',
-              controller: _nameController,
-              icon: Icons.person_outline,
-            ),
-            _buildProfileInputField(
-              context,
-              label: 'phone number',
-              controller: _phoneController,
-              icon: Icons.phone_android,
-              keyboardType: TextInputType.phone,
-            ),
-            _buildProfileInputField(
-              context,
-              label: 'email',
-              controller: _emailController,
-              icon: Icons.email_outlined,
-              keyboardType: TextInputType.emailAddress,
-            ),
+            _buildProfileInputField(context, label: 'profile name', controller: _nameController, icon: Icons.person_outline),
+            _buildProfileInputField(context, label: 'phone number', controller: _phoneController, icon: Icons.phone_android, keyboardType: TextInputType.phone),
+            _buildProfileInputField(context, label: 'email', controller: _emailController, icon: Icons.email_outlined, keyboardType: TextInputType.emailAddress, isReadOnly: true),
             _buildGenderDropdown(context),
-
-            SizedBox(height: 20),
-
+            const SizedBox(height: 20),
             SwitchListTile(
-              title: Text(
-                'Dark Mode',
-                style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
-              ),
-              secondary: Icon(
-                themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
-                color: mainColor,
-              ),
+              title: Text('Dark Mode', style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color)),
+              secondary: Icon(themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode, color: mainColor),
               value: themeProvider.isDarkMode,
-              onChanged: (bool value) {
-                themeProvider.toggleTheme(value);
-              },
+              onChanged: (bool value) => themeProvider.toggleTheme(value),
               activeColor: mainColor,
               tileColor: Theme.of(context).cardColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
                 side: BorderSide(color: Colors.grey.withOpacity(0.5)),
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             ),
-
             const SizedBox(height: 40),
-            ElevatedButton(
+            _isLoading
+                ? const CircularProgressIndicator()
+                : ElevatedButton(
               onPressed: _updateProfile,
               style: ElevatedButton.styleFrom(
                 backgroundColor: mainColor,
-                padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                 elevation: 8,
               ),
-              child: Text(
-                'Update',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              child: const Text('Update', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -170,37 +220,33 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  // ===================================================================
+  // 4. UI HELPER WIDGETS
+  // ===================================================================
   Widget _buildProfileInputField(BuildContext context, {
     required String label,
     required TextEditingController controller,
     required IconData icon,
     TextInputType keyboardType = TextInputType.text,
+    bool isReadOnly = false,// Properti untuk membuat field tidak bisa diedit
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
+        readOnly: isReadOnly,
         style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
         decoration: InputDecoration(
           labelText: label,
           labelStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color),
           prefixIcon: Icon(icon, color: Theme.of(context).iconTheme.color),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Color(0xFFA05E1A), width: 2),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey.withOpacity(0.5))),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: const Color(0xFFA05E1A), width: 2)),
           filled: true,
           fillColor: Theme.of(context).cardColor,
-          contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+          contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         ),
       ),
     );
@@ -215,33 +261,18 @@ class _ProfilePageState extends State<ProfilePage> {
           labelText: 'gender',
           labelStyle: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color),
           prefixIcon: Icon(Icons.person_outline, color: Theme.of(context).iconTheme.color),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey.withOpacity(0.5)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Color(0xFFA05E1A), width: 2),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: Colors.grey.withOpacity(0.5))),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: const Color(0xFFA05E1A), width: 2)),
           filled: true,
           fillColor: Theme.of(context).cardColor,
-          contentPadding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+          contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         ),
-        hint: Text(
-          'Select Gender',
-          style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color),
-        ),
+        hint: Text('Select Gender', style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color)),
         items: _genders.map((String gender) {
           return DropdownMenuItem<String>(
             value: gender,
-            child: Text(
-              gender,
-              style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
-            ),
+            child: Text(gender, style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color)),
           );
         }).toList(),
         onChanged: (String? newValue) {

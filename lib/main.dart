@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:voqula/provider/user_provider.dart';
 import 'package:voqula/untils/theme_provider.dart';
 import 'package:voqula/routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,8 +11,11 @@ void main() async {
   await FirebaseService.initializeFirebase();
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -83,8 +87,6 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-
-
           darkTheme: ThemeData(
             brightness: Brightness.dark,
             primaryColor: const Color(0xFFA05E1A),
@@ -135,11 +137,10 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
-          initialRoute: '/Cover',
+          initialRoute: '/cover',
           routes: appRoutes,
         );
       },
-      child: Container(),
     );
   }
 }
