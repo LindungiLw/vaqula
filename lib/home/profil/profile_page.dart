@@ -1,13 +1,12 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import '../../provider/user_provider.dart';
-import '../../services/database_service.dart';
-import '../../untils/theme_provider.dart';
+import 'package:voqula/provider/user_provider.dart';
+import 'package:voqula/services/database_service.dart';
+import 'package:voqula/untils/theme_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -17,9 +16,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  // ===================================================================
-  // 1. DEKLARASI VARIABEL & CONTROLLER
-  // ===================================================================
+
   final DatabaseService _databaseService = DatabaseService();
   bool _isLoading = false;
 
@@ -29,10 +26,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   String? _selectedGender;
   final List<String> _genders = ['Male', 'Female', 'Other'];
-
-  // ===================================================================
-  // 2. LIFECYCLE & LOGIC METHODS
-  // ===================================================================
 
   @override
   void initState() {
@@ -85,7 +78,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // PENAMBAHAN BARU: Fungsi lengkap untuk ganti foto profil
   void _changeProfilePicture() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -120,10 +112,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-
-  // ===================================================================
-  // 3. UI BUILD METHOD
-  // ===================================================================
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +148,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   bottom: 0,
                   right: 0,
                   child: GestureDetector(
-                    // PENYESUAIAN: Hubungkan ke fungsi yang benar
                     onTap: _changeProfilePicture,
                     child: Container(
                       padding: const EdgeInsets.all(4),
@@ -220,15 +207,12 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // ===================================================================
-  // 4. UI HELPER WIDGETS
-  // ===================================================================
   Widget _buildProfileInputField(BuildContext context, {
     required String label,
     required TextEditingController controller,
     required IconData icon,
     TextInputType keyboardType = TextInputType.text,
-    bool isReadOnly = false,// Properti untuk membuat field tidak bisa diedit
+    bool isReadOnly = false,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),

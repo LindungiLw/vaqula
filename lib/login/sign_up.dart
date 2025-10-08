@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../provider/user_provider.dart';
-import '../services/auth_services.dart';
+import 'package:voqula/provider/user_provider.dart';
+import 'package:voqula/services/auth_services.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
