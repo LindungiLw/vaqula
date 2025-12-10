@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../provider/user_provider.dart';
 import '../services/auth_services.dart';
 
 class LoginPage extends StatefulWidget {
@@ -22,7 +24,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-
     _authService = AuthService(_showSnackBar);
   }
 
@@ -33,11 +34,7 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscurePassword = !_obscurePassword;
-    });
-  }
+  void _togglePasswordVisibility() => setState(() => _obscurePassword = !_obscurePassword);
 
   void _showSnackBar(String message) {
     if (mounted) {
@@ -48,38 +45,44 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _signInWithEmailPassword() async {
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
-    final user = await _authService.signInWithEmailPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+    try {
+      final user = await _authService.signInWithEmailPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
-    if (user != null) {
-      Navigator.pushReplacementNamed(context, '/main_screen');
+      if (user != null) {
+        await Provider.of<UserProvider>(context, listen: false).fetchUserData(user.uid);
+        Navigator.pushReplacementNamed(context, '/main_screen');
+      }
+    } catch (e) {
+      print("Error in signin UI: $e");
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   Future<void> _signInWithGoogle() async {
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
-    final user = await _authService.signInWithGoogle();
+    try {
+      final user = await _authService.signInWithGoogle();
 
-    if (user != null) {
-      Navigator.pushReplacementNamed(context, '/main_screen');
+      if (user != null) {
+        await Provider.of<UserProvider>(context, listen: false).fetchUserData(user.uid);
+        Navigator.pushReplacementNamed(context, '/main_screen');
+      }
+    } catch (e) {
+      print("Error in Google sign in UI: $e");
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   @override
@@ -113,8 +116,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-
-
             Positioned.fill(
               top: 230 - 25,
               child: SingleChildScrollView(
@@ -141,7 +142,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       const SizedBox(height: 30),
-
                       _buildTextField(
                         controller: _emailController,
                         labelText: 'Email',
@@ -150,7 +150,6 @@ class _LoginPageState extends State<LoginPage> {
                         context: context,
                       ),
                       const SizedBox(height: 16),
-
                       _buildPasswordTextField(
                         controller: _passwordController,
                         labelText: 'Password',
@@ -158,20 +157,13 @@ class _LoginPageState extends State<LoginPage> {
                         onToggleVisibility: _togglePasswordVisibility,
                         context: context,
                       ),
-
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: _isLoading ? null : () {
-                            _showSnackBar('Password not found.');
-                          },
-                          child: Text(
-                            'Forgot Password?',
-                            style: GoogleFonts.inter(color: Colors.grey[700]),
-                          ),
+                          onPressed: _isLoading ? null : () => _showSnackBar('Password not found.'),
+                          child: Text('Forgot Password?', style: GoogleFonts.inter(color: Colors.grey[700])),
                         ),
                       ),
-
                       ElevatedButton(
                         onPressed: _isLoading ? null : _signInWithEmailPassword,
                         style: ElevatedButton.styleFrom(
@@ -184,17 +176,10 @@ class _LoginPageState extends State<LoginPage> {
                             ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                         )
-                            : Text(
-                          'Login',
-                          style: GoogleFonts.poppins(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600),
-                        ),
+                            : Text('Login', style: GoogleFonts.poppins(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w600)),
                       ),
-
                       const SizedBox(height: 16),
                       Row(
                         children: [
@@ -207,7 +192,6 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                       const SizedBox(height: 16),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -219,9 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ],
                       ),
-
                       const SizedBox(height: 20),
-
                       Center(
                         child: RichText(
                           text: TextSpan(
@@ -230,10 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               TextSpan(
                                 text: 'Register',
-                                style: GoogleFonts.inter(
-                                  color: mainColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: GoogleFonts.inter(color: mainColor, fontWeight: FontWeight.bold),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     if (!_isLoading) {
@@ -293,10 +272,7 @@ class _LoginPageState extends State<LoginPage> {
         labelText: labelText,
         prefixIcon: Icon(Icons.lock_outline, color: Colors.grey.shade600),
         suffixIcon: IconButton(
-          icon: Icon(
-            obscureText ? Icons.visibility_off : Icons.visibility,
-            color: Colors.grey.shade600,
-          ),
+          icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.grey.shade600),
           onPressed: onToggleVisibility,
         ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),

@@ -22,5 +22,5 @@ final Map<String, WidgetBuilder> appRoutes = {
   '/search_tab': (BuildContext context) => SearchPage(),
   '/profile_tab': (BuildContext context) => ProfilePage(),
   '/notifications': (BuildContext context) => NotificationPage(),
-  '/add_book_page': (BuildContext context) => AddBookPage(onBookAdded: (book) {}),
+  '/add_book': (BuildContext context) => AddBookPage(),
 };

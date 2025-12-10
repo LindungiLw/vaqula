@@ -113,7 +113,10 @@ class _MainScreenState extends State<MainScreen> {
 
     return Scaffold(
       appBar: currentAppBar,
-      body: _widgetOptions.elementAt(_selectedIndex),
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: _widgetOptions,
+        ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
         unselectedItemColor: Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
