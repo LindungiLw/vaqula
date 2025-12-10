@@ -11,6 +11,36 @@ class ViewAllBooksPage extends StatelessWidget {
     required this.books,
   }) : super(key: key);
 
+  Widget _buildBookImage(String url) {
+    if (url.startsWith('http') || url.startsWith('https')) {
+      return Image.network(
+        url,
+        width: 50,
+        height: 70,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          width: 50,
+          height: 70,
+          color: Colors.grey[300],
+          child: const Icon(Icons.broken_image, color: Colors.grey),
+        ),
+      );
+    } else {
+      return Image.asset(
+        url,
+        width: 50,
+        height: 70,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          width: 50,
+          height: 70,
+          color: Colors.grey[300],
+          child: const Icon(Icons.broken_image, color: Colors.grey),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,18 +82,7 @@ class ViewAllBooksPage extends StatelessWidget {
             child: ListTile(
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(4.0),
-                child: Image.asset(
-                  book['imageUrl']!,
-                  width: 50,
-                  height: 70,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    width: 50,
-                    height: 70,
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.broken_image, color: Colors.grey),
-                  ),
-                ),
+                child: _buildBookImage(book['imageUrl']!),
               ),
               title: Text(
                 book['title']!,

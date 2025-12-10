@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:voqula/provider/user_provider.dart';
 import 'package:voqula/services/database_service.dart';
 import 'package:voqula/untils/theme_provider.dart';
+import 'package:voqula/services/auth_services.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -112,6 +113,43 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  void _handleLogout() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Log Out'),
+        content: const Text('Are you sure you want to log out?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+
+
+              final authService = AuthService((message) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(message)),
+                );
+              });
+
+              await authService.signOut();
+
+              if (mounted) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/login',
+                      (route) => false,
+                );
+              }
+            },
+            child: const Text('Log Out', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -188,6 +226,28 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             ),
+
+            const SizedBox(height: 20),
+
+            ListTile(
+              title: Text(
+                'Log Out',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              leading: const Icon(Icons.logout, color: Colors.red),
+              onTap: _handleLogout,
+              tileColor: Theme.of(context).cardColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: BorderSide(color: Colors.grey.withOpacity(0.5)),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            ),
+
             const SizedBox(height: 40),
             _isLoading
                 ? const CircularProgressIndicator()

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'book_data.dart';
+import 'package:voqula/services/database_service.dart';
+import './book_data.dart';
 
 class AddBookPage extends StatefulWidget {
-  final Function(Map<String, String>) onBookAdded;
 
-  const AddBookPage({Key? key, required this.onBookAdded}) : super(key: key);
+  const AddBookPage({Key? key}) : super(key: key);
 
   @override
   State<AddBookPage> createState() => _AddBookPageState();
@@ -12,11 +12,17 @@ class AddBookPage extends StatefulWidget {
 
 class _AddBookPageState extends State<AddBookPage> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _authorController = TextEditingController();
   final TextEditingController _imageUrlController = TextEditingController();
 
+
+  final DatabaseService _dbService = DatabaseService();
+  bool _isLoading = false;
+
   String? _selectedCategory;
+
   final List<String> _categories = categoriesList.sublist(1);
 
   @override
@@ -27,7 +33,7 @@ class _AddBookPageState extends State<AddBookPage> {
     super.dispose();
   }
 
-  void _addBook() {
+  void _addBook() async {
     if (_formKey.currentState!.validate()) {
       if (_selectedCategory == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -36,20 +42,33 @@ class _AddBookPageState extends State<AddBookPage> {
         return;
       }
 
-      final newBook = {
-        'title': _titleController.text.trim(),
-        'author': _authorController.text.trim(),
-        'imageUrl': _imageUrlController.text.trim().isEmpty
-            ? 'https://placehold.co/120x150/E0E0E0/000000?text=No+Image'
-            : _imageUrlController.text.trim(),
-        'category': _selectedCategory!,
-      };
+      setState(() => _isLoading = true);
 
-      widget.onBookAdded(newBook);
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Book added successfully!')),
-      );
+      try {
+        await _dbService.addBook(
+          title: _titleController.text.trim(),
+          author: _authorController.text.trim(),
+          imageUrl: _imageUrlController.text.trim().isEmpty
+              ? 'https://placehold.co/120x150/E0E0E0/000000?text=No+Image'
+              : _imageUrlController.text.trim(),
+          category: _selectedCategory!,
+        );
+
+        if (mounted) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Book added successfully!')),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to add book: $e')),
+          );
+        }
+      } finally {
+        if (mounted) setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -62,9 +81,7 @@ class _AddBookPageState extends State<AddBookPage> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Theme.of(context).iconTheme.color),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Add New Book',
@@ -96,7 +113,7 @@ class _AddBookPageState extends State<AddBookPage> {
               const SizedBox(height: 16),
               _buildTextField(
                 controller: _imageUrlController,
-                labelText: 'Image URL (Optional)',
+                labelText: 'Image URL (Use https://...)',
                 icon: Icons.image_outlined,
                 keyboardType: TextInputType.url,
               ),
@@ -136,17 +153,21 @@ class _AddBookPageState extends State<AddBookPage> {
                 },
               ),
               const SizedBox(height: 30),
-              ElevatedButton(
+
+              _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ElevatedButton(
                 onPressed: _addBook,
                 style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFb8792b),
                   minimumSize: const Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(30),
                   ),
                 ),
                 child: const Text(
                   'Add Book',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
             ],
